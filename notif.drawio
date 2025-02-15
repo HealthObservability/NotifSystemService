@@ -150,9 +150,6 @@
             <mxGeometry x="880" y="-235" width="200" height="50" as="geometry" />
           </mxCell>
         </UserObject>
-        <mxCell id="AgIs3QRMj3r2aVUMz6G5-53" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.smiley" vertex="1" parent="1">
-          <mxGeometry x="15" y="-315" width="100" height="100" as="geometry" />
-        </mxCell>
         <mxCell id="AgIs3QRMj3r2aVUMz6G5-71" value="" style="ellipse;html=1;shape=startState;fillColor=#000000;strokeColor=#ff0000;" vertex="1" parent="1">
           <mxGeometry x="60" y="625" width="30" height="30" as="geometry" />
         </mxCell>
@@ -167,6 +164,14 @@
               <mxPoint x="630" y="550" />
               <mxPoint x="678" y="550" />
             </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AgIs3QRMj3r2aVUMz6G5-75" value="SENDER COMMON SERVICE" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="880" y="600" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="AgIs3QRMj3r2aVUMz6G5-68" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="AgIs3QRMj3r2aVUMz6G5-66" target="AgIs3QRMj3r2aVUMz6G5-75">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="865" y="640" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
