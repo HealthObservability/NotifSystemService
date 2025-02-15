@@ -1,9 +1,14 @@
 package services
 
-import "context"
+import (
+	"context"
+	"notifservice/internal/services/checker"
+	"notifservice/internal/storages"
+)
 
 type Checker interface {
-	LookUpNotifications()
+	GetNotifications(context.Context)
+	LoopRepeater(context.Context) error
 }
 
 type Updater interface {
@@ -13,8 +18,13 @@ type Updater interface {
 type Service struct {
 	Checker
 	Updater
+
+	s *storages.Storage
 }
 
-func New() *Service {
-	return &Service{}
+func New(s *storages.Storage) *Service {
+	return &Service{
+		Checker: checker.NewCheckerService(),
+		s:       s,
+	}
 }
