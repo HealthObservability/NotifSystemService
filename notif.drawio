@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36" version="26.0.14">
   <diagram name="Страница — 1" id="C-rm6948-X4D99MSGK4N">
-    <mxGraphModel dx="1509" dy="2004" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2206" dy="2389" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -167,14 +167,6 @@
               <mxPoint x="630" y="550" />
               <mxPoint x="678" y="550" />
             </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="AgIs3QRMj3r2aVUMz6G5-75" value="SENDER COMMON SERVICE" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="880" y="600" width="120" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="AgIs3QRMj3r2aVUMz6G5-68" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="AgIs3QRMj3r2aVUMz6G5-66" target="AgIs3QRMj3r2aVUMz6G5-75">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="865" y="640" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
