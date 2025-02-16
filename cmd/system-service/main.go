@@ -3,8 +3,12 @@ package main
 import (
 	"context"
 	"flag"
-	"notifservice/internal/services"
-	"notifservice/pkg/logger"
+	"github.com/HealthObservability/NotifSystemService/internal/adapters"
+	"github.com/HealthObservability/NotifSystemService/internal/app"
+	"github.com/HealthObservability/NotifSystemService/internal/config"
+	"github.com/HealthObservability/NotifSystemService/internal/services"
+	"github.com/HealthObservability/NotifSystemService/internal/storages"
+	"github.com/HealthObservability/NotifSystemService/pkg/logger"
 	"os"
 	"os/signal"
 	"syscall"
@@ -18,6 +22,12 @@ var (
 func main() {
 	logger.InitLogger(isLocal, isDebug)
 
+	cfg := config.MustConfigure("./config.yaml")
+
+	adapt := adapters.NewAdapters(cfg)
+	storage := storages.MustNew(adapt)
+	service := services.MustNew(storage)
+
 	ctx, stop := signal.NotifyContext(
 		context.Background(),
 		syscall.SIGHUP,
@@ -27,12 +37,6 @@ func main() {
 		os.Interrupt,
 	)
 	defer stop()
-
-	s := services.New(nil)
-
-	logger.Logger.Info("starting system service")
-
-	if err := s.LoopRepeater(ctx); err != nil {
-		logger.Logger.Fatal(err)
-	}
+	
+	app.Run(ctx, adapt, service)
 }

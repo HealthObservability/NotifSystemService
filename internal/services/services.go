@@ -2,8 +2,8 @@ package services
 
 import (
 	"context"
-	"notifservice/internal/services/checker"
-	"notifservice/internal/storages"
+	"github.com/HealthObservability/NotifSystemService/internal/services/checker"
+	"github.com/HealthObservability/NotifSystemService/internal/storages"
 )
 
 type Checker interface {
@@ -22,9 +22,9 @@ type Service struct {
 	s *storages.Storage
 }
 
-func New(s *storages.Storage) *Service {
+func MustNew(s *storages.Storage) *Service {
 	return &Service{
-		Checker: checker.NewCheckerService(),
+		Checker: checker.NewCheckerService(s),
 		s:       s,
 	}
 }

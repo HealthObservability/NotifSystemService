@@ -2,17 +2,19 @@ package checker
 
 import (
 	"context"
-	"notifservice/pkg/logger"
+	"github.com/HealthObservability/NotifSystemService/internal/storages"
+	"github.com/HealthObservability/NotifSystemService/pkg/logger"
 	"time"
 )
 
 const repeatTime = 1 * time.Second
 
 type Service struct {
+	storage *storages.Storage
 }
 
-func NewCheckerService() *Service {
-	return &Service{}
+func NewCheckerService(s *storages.Storage) *Service {
+	return &Service{s}
 }
 
 func (s *Service) GetNotifications(ctx context.Context) {
