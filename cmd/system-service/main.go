@@ -4,8 +4,8 @@ import (
 	"context"
 	"flag"
 	"github.com/HealthObservability/NotifSystemService/internal/adapters"
-	"github.com/HealthObservability/NotifSystemService/internal/app"
 	"github.com/HealthObservability/NotifSystemService/internal/config"
+	"github.com/HealthObservability/NotifSystemService/internal/handlers"
 	"github.com/HealthObservability/NotifSystemService/internal/services"
 	"github.com/HealthObservability/NotifSystemService/internal/storages"
 	"github.com/HealthObservability/NotifSystemService/pkg/logger"
@@ -24,9 +24,10 @@ func main() {
 
 	cfg := config.MustConfigure("./config.yaml")
 
-	adapt := adapters.NewAdapters(cfg)
-	storage := storages.MustNew(adapt)
-	service := services.MustNew(storage)
+	ad := adapters.NewAdapters(cfg)
+	st := storages.MustNew(ad)
+	srv := services.MustNew(st)
+	h := handlers.New(srv)
 
 	ctx, stop := signal.NotifyContext(
 		context.Background(),
@@ -37,6 +38,6 @@ func main() {
 		os.Interrupt,
 	)
 	defer stop()
-	
-	app.Run(ctx, adapt, service)
+
+	h.Run(ctx, ad)
 }

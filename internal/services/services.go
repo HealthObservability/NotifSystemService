@@ -6,25 +6,22 @@ import (
 	"github.com/HealthObservability/NotifSystemService/internal/storages"
 )
 
-type Checker interface {
-	GetNotifications(context.Context)
-	LoopRepeater(context.Context) error
+type Notif interface {
+	GetNotifications(context.Context) ([]any, error)
+	UpdateNotifications(ctx context.Context, id, msg string) error
 }
 
-type Updater interface {
-	UpdateNotifications(ctx context.Context, id, message string)
+type Sender interface {
+	SendNotifications(ctx context.Context, notifs []any) error
 }
 
 type Service struct {
-	Checker
-	Updater
-
-	s *storages.Storage
+	Notif
+	Sender
 }
 
 func MustNew(s *storages.Storage) *Service {
 	return &Service{
-		Checker: checker.NewCheckerService(s),
-		s:       s,
+		Notif: checker.NewNotifService(s),
 	}
 }

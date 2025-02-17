@@ -1,4 +1,4 @@
-package app
+package handlers
 
 import (
 	"context"
@@ -12,12 +12,23 @@ import (
 
 const timeout = time.Second * 10
 
-func Run(ctx context.Context, a *adapters.Adapters, s *services.Service) {
+type Handler struct {
+	service *services.Service
+}
+
+func New(s *services.Service) *Handler {
+	return &Handler{s}
+}
+
+func (h *Handler) Run(ctx context.Context, a *adapters.Adapters) {
 	log := logger.Logger.WithField("op", "app.Run")
 
-	if err := s.LoopRepeater(ctx); err != nil {
-		log.Fatal(err.Error())
-	}
+	// run here all handlers and services
+	a.Looper.Start(ctx, h.handleLoop)
+
+	// graceful shutdown
+	tCtx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
 
 	g, _ := errgroup.WithContext(ctx)
 
@@ -37,13 +48,10 @@ func Run(ctx context.Context, a *adapters.Adapters, s *services.Service) {
 	// })
 
 	if err := g.Wait(); err != nil {
-		log.Errorf("shutdown error: %v", err)
+		log.Errorf("shutdown handlers error: %v", err)
 	}
 
 	g.Go(func() error {
-		tCtx, cancel := context.WithTimeout(context.Background(), timeout)
-		defer cancel()
-
 		if err := a.Postgres.Shutdown(tCtx); err != nil {
 			return fmt.Errorf("failed to shutdown postgres adapter: %w", err)
 		}
