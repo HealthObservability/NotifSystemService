@@ -9,14 +9,20 @@ func (h *Handler) handleLoop(ctx context.Context) {
 	log := logger.Logger.WithField("op", "handler.handleLoop")
 	log.Info("Loop iteration")
 
-	notifications, err := h.service.GetNotifications(ctx)
+	notifStates, err := h.service.GetNotifStates(ctx)
 	if err != nil {
-		log.WithError(err).Error("Error getting notifications")
+		log.WithError(err).Error("Error getting notifStates")
 		return
 	}
 
-	if err := h.service.SendNotifications(ctx, notifications); err != nil {
-		log.WithError(err).Error("Error sending notifications")
+	fullNotifications, err := h.service.GetFullNotifs(ctx, notifStates)
+	if err != nil {
+		log.WithError(err).Error("Error getting fullNotifications")
+		return
+	}
+
+	if err := h.service.SendNotifications(ctx, fullNotifications); err != nil {
+		log.WithError(err).Error("Error sending notifStates")
 		return
 	}
 }

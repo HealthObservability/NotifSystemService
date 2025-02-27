@@ -2,17 +2,19 @@ package services
 
 import (
 	"context"
-	"github.com/HealthObservability/NotifSystemService/internal/services/checker"
+	"github.com/HealthObservability/NotifSystemService/internal/domains"
+	"github.com/HealthObservability/NotifSystemService/internal/services/notifservice"
 	"github.com/HealthObservability/NotifSystemService/internal/storages"
 )
 
 type Notif interface {
-	GetNotifications(context.Context) ([]any, error)
+	GetNotifStates(context.Context) ([]domains.NotifStatus, error)
+	GetFullNotifs(context.Context, []domains.NotifStatus) ([]domains.Notification, error)
 	UpdateNotifications(ctx context.Context, id, msg string) error
 }
 
 type Sender interface {
-	SendNotifications(ctx context.Context, notifs []any) error
+	SendNotifications(ctx context.Context, notifs []domains.Notification) error
 }
 
 type Service struct {
@@ -22,6 +24,6 @@ type Service struct {
 
 func MustNew(s *storages.Storage) *Service {
 	return &Service{
-		Notif: checker.NewNotifService(s),
+		Notif: notifservice.NewNotifService(s),
 	}
 }

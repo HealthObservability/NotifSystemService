@@ -1,7 +1,7 @@
 package domains
 
-// NotificationStatus is an object contains in postgres db and references to Notification.
-type NotificationStatus struct {
+// NotifStatus is an object contains in postgres db and references to Notification.
+type NotifStatus struct {
 	NotificationID string `json:"notification_id"`
 	SendDue        uint64 `json:"send_due"`
 	CreateDate     uint64 `json:"create_date"`

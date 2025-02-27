@@ -1,12 +1,14 @@
 package storages
 
 import (
+	"context"
 	"github.com/HealthObservability/NotifSystemService/internal/adapters"
+	"github.com/HealthObservability/NotifSystemService/internal/domains"
 )
 
 type NotificationStates interface {
-	UpdateNotifications()
-	GetNotifications()
+	UpdateNotifications(ctx context.Context) error
+	GetNotifications(context.Context) ([]domains.NotifStatus, error)
 }
 
 type Notifications interface {
