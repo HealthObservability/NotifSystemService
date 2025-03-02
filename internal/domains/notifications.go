@@ -2,8 +2,8 @@ package domains
 
 import "time"
 
-// NotifStatus is an object contains in postgres db and references to Notification.
-type NotifStatus struct {
+// NotifState is an object contains in postgres db and references to Notification.
+type NotifState struct {
 	ID             uint64    `json:"id"`
 	NotificationID string    `json:"notification_id"`
 	SendDue        time.Time `json:"send_due"`

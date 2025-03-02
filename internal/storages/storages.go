@@ -8,7 +8,7 @@ import (
 
 type NotificationStates interface {
 	UpdateNotifications(ctx context.Context) error
-	GetNotifications(context.Context) ([]domains.NotifStatus, error)
+	GetNotifStates(context.Context) ([]domains.NotifState, error)
 }
 
 type Notifications interface {

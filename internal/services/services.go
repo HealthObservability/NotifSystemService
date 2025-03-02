@@ -8,8 +8,9 @@ import (
 )
 
 type Notif interface {
-	GetNotifStates(context.Context) ([]domains.NotifStatus, error)
-	GetFullNotifs(context.Context, []domains.NotifStatus) ([]domains.Notification, error)
+	GetNotifStates(context.Context) ([]domains.NotifState, error)
+	ChangeNotifState(context.Context, uint64, string) error
+	GetFullNotifs(context.Context, []domains.NotifState) ([]domains.Notification, error)
 	UpdateNotifications(ctx context.Context, id, msg string) error
 }
 

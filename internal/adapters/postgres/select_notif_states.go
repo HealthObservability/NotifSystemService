@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func (p *Postgres) GetNotifications(ctx context.Context) ([]domains.NotifStatus, error) {
+func (p *Postgres) GetNotifStates(ctx context.Context) ([]domains.NotifState, error) {
 	log := logger.Logger.WithField("op", "Postgres.GetNotifStates")
 
 	q := `
@@ -30,9 +30,9 @@ func (p *Postgres) GetNotifications(ctx context.Context) ([]domains.NotifStatus,
 		}
 	}(rows)
 
-	var notifs []domains.NotifStatus
+	var notifs []domains.NotifState
 	for rows.Next() {
-		var notif domains.NotifStatus
+		var notif domains.NotifState
 		err := rows.Scan(
 			&notif.ID,
 			&notif.NotificationID,
