@@ -9,6 +9,9 @@ lint:
 lint-fast:
 	$(GOLANGCI_LINT) run ./... --fast --config=golangci.yaml
 
+migration_create:
+	migrate create -ext sql -dir db/migrations/ -seq $(NAME)
+
 migration_version:
 	migrate -path db/migrations/ -database "postgresql://postgres:postgres@localhost:5432/postgres_db?sslmode=disable" -verbose version
 

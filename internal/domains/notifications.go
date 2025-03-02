@@ -1,12 +1,14 @@
 package domains
 
+import "time"
+
 // NotifStatus is an object contains in postgres db and references to Notification.
 type NotifStatus struct {
-	ID             uint64 `json:"id"`
-	NotificationID string `json:"notification_id"`
-	SendDue        uint64 `json:"send_due"`
-	CreateDate     uint64 `json:"create_date"`
-	Status         string `json:"status"` // notSent / Sent / cancelled
+	ID             uint64    `json:"id"`
+	NotificationID string    `json:"notification_id"`
+	SendDue        time.Time `json:"send_due"`
+	CreateDate     time.Time `json:"create_date"`
+	Status         string    `json:"status"` // notSent / Sent / cancelled
 }
 
 // Notification is an object that contains in any key-value or document-based db.
