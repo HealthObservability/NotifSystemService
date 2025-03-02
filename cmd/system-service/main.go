@@ -16,7 +16,7 @@ import (
 
 var (
 	isLocal = flag.Bool("local", false, "is it local? can make logs pretty")
-	isDebug = flag.Bool("debug", false, "wanna see debug mode?")
+	isDebug = flag.Bool("debug", true, "wanna see debug mode?")
 )
 
 func main() {

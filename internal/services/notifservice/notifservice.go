@@ -16,7 +16,16 @@ func NewNotifService(s *storages.Storage) *Service {
 }
 
 func (s *Service) GetNotifStates(ctx context.Context) ([]domains.NotifStatus, error) {
-	return s.storage.NotificationStates.GetNotifications(ctx)
+	notifs, err := s.storage.NotificationStates.GetNotifications(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if notifs == nil {
+		notifs = make([]domains.NotifStatus, 0)
+	}
+
+	return notifs, nil
 }
 
 func (s *Service) GetFullNotifs(context.Context, []domains.NotifStatus) ([]domains.Notification, error) {

@@ -3,22 +3,21 @@ package postgres
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
 	"github.com/HealthObservability/NotifSystemService/pkg/logger"
 	"time"
 )
 
-func (p *Postgres) GetNotifications(context.Context) ([]domains.NotifStatus, error) {
+func (p *Postgres) GetNotifications(ctx context.Context) ([]domains.NotifStatus, error) {
 	log := logger.Logger.WithField("op", "Postgres.GetNotifStates")
-	log.Debug("Getting all notifications MOCK")
 
-	q := fmt.Sprintf(
-		"SELECT * FROM notif_states WHERE send_due <= %s AND status = 'not_sent'",
-		time.Now().Format(time.RFC3339),
-	)
+	q := `
+			SELECT * 
+			FROM notif_states
+			WHERE send_due <= $1 AND status = 'not_sent'
+	`
 
-	rows, err := p.db.Query(q)
+	rows, err := p.db.QueryContext(ctx, q, time.Now())
 	if err != nil {
 		return nil, err
 	} else if rows.Err() != nil {

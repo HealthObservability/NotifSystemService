@@ -15,14 +15,17 @@ func (h *Handler) handleLoop(ctx context.Context) {
 		return
 	}
 
-	fullNotifications, err := h.service.GetFullNotifs(ctx, notifStates)
-	if err != nil {
-		log.WithError(err).Error("Error getting fullNotifications")
-		return
-	}
+	log.WithField("notifs", notifStates).Debug("Got notifStates")
 
-	if err := h.service.SendNotifications(ctx, fullNotifications); err != nil {
-		log.WithError(err).Error("Error sending notifStates")
-		return
-	}
+	//_, err = h.service.GetFullNotifs(ctx, notifStates)
+	//if err != nil {
+	//	log.WithError(err).Error("Error getting fullNotifications")
+	//	return
+	//}
+
+	// fixme
+	//if err := h.service.SendNotifications(ctx, fullNotifications); err != nil {
+	//	log.WithError(err).Error("Error sending notifStates")
+	//	return
+	//}
 }
