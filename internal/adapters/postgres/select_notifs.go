@@ -25,7 +25,7 @@ func (p *Postgres) GetNotifs(ctx context.Context, id uint64) ([]any, error) {
 		if err := rows.Close(); err != nil {
 			log.WithError(err).Error("failed to close rows")
 		}
-	}
+	}(rows)
 
 	var notifs []any
 	for rows.Next() {

@@ -1,10 +1,9 @@
 BEGIN;
 
--- Drop the existing primary key constraint (if it exists)
-ALTER TABLE notif_states DROP CONSTRAINT IF EXISTS notif_states_pkey;
+ALTER TABLE IF EXISTS notif_states DROP CONSTRAINT IF EXISTS notif_states_pkey;
 
 -- Create a new sequence for the id column
-CREATE SEQUENCE notif_states_id_seq;
+CREATE SEQUENCE IF NOT EXISTS if_states_id_seq;
 
 -- Update the id column to use the sequence and set it as the primary key
 ALTER TABLE notif_states

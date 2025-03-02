@@ -1,1 +1,1 @@
-DROP TABLE notif_states;
+DROP TABLE IF EXISTS notif_states;
