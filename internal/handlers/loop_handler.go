@@ -14,18 +14,17 @@ func (h *Handler) handleLoop(ctx context.Context) {
 		log.WithError(err).Error("Error getting notifStates")
 		return
 	}
+	log.WithField("states", notifStates).Debug("Got notifStates")
 
-	log.WithField("notifs", notifStates).Debug("Got notifStates")
+	// if err := h.service.ChangeStatesStatus(ctx, notifStates, notifservice.PendingStatus); err != nil {
+	// 	log.WithError(err).Error("Error changing states")
+	// 	return
+	// }
 
-	//_, err = h.service.GetFullNotifs(ctx, notifStates)
-	//if err != nil {
-	//	log.WithError(err).Error("Error getting fullNotifications")
-	//	return
-	//}
+	fullNotifs, err := h.service.GetNotifs(ctx, notifStates)
+	if err != nil {
+		log.WithError(err).Error("Error getting notifs")
+	}
 
-	// fixme
-	//if err := h.service.SendNotifications(ctx, fullNotifications); err != nil {
-	//	log.WithError(err).Error("Error sending notifStates")
-	//	return
-	//}
+	log.WithField("full_notifs", fullNotifs).Debug("Got full notifs")
 }

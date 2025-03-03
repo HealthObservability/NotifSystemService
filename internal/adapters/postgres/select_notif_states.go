@@ -9,7 +9,7 @@ import (
 )
 
 func (p *Postgres) GetNotifStates(ctx context.Context) ([]domains.NotifState, error) {
-	log := logger.Logger.WithField("op", "Postgres.GetNotifStates")
+	log := logger.Logger.WithField("op", "Postgres.getNotifStates")
 
 	q := `
 			SELECT * 

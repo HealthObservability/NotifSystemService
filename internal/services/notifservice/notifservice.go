@@ -7,7 +7,10 @@ import (
 	"github.com/HealthObservability/NotifSystemService/internal/storages"
 )
 
-const SentStatus = "sent"
+const (
+	SentStatus    = "sent"
+	PendingStatus = "pending"
+)
 
 type Service struct {
 	storage *storages.Storage
@@ -15,6 +18,25 @@ type Service struct {
 
 func NewNotifService(s *storages.Storage) *Service {
 	return &Service{s}
+}
+
+func (s *Service) GetNotifs(ctx context.Context, n []domains.NotifState) ([]domains.Notif, error) {
+	length := len(n)
+	ids := make([]uint64, length)
+	for i := 0; i < length; i++ {
+		ids[i] = n[i].NotificationID
+	}
+
+	notifs, err := s.storage.GetNotifs(ctx, ids)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(notifs) == 0 {
+		return []domains.Notif{}, nil
+	}
+
+	return notifs, nil
 }
 
 func (s *Service) GetNotifStates(ctx context.Context) ([]domains.NotifState, error) {
@@ -30,15 +52,6 @@ func (s *Service) GetNotifStates(ctx context.Context) ([]domains.NotifState, err
 	return notifs, nil
 }
 
-func (s *Service) ChangeNotifState(context.Context, uint64, string) error {
-	// todo implement
-	return nil
-}
-
-func (s *Service) GetFullNotifs(context.Context, []domains.NotifState) ([]domains.Notification, error) {
-	return []domains.Notification{}, nil
-}
-
-func (s *Service) UpdateNotifications(ctx context.Context, id, msg string) error {
+func (s *Service) UpdateNotifications(context.Context, string, string) error {
 	return errors.New("not implemented")
 }
