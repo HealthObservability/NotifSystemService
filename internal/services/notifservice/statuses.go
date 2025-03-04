@@ -7,7 +7,7 @@ import (
 
 func (s *Service) ChangeStatesStatus(ctx context.Context, n []domains.NotifState, newStatus string) error {
 	length := len(n)
-	ids := make([]uint64, length)
+	ids := make([]int64, length)
 
 	for i := 0; i < length; i++ {
 		ids[i] = n[i].ID

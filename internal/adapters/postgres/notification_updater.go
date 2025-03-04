@@ -5,7 +5,7 @@ import (
 	"github.com/lib/pq"
 )
 
-func (p *Postgres) SetNewStatuses(ctx context.Context, status string, ids []uint64) error {
+func (p *Postgres) SetNewStatuses(ctx context.Context, status string, ids []int64) error {
 	q := `
 		UPDATE notif_states
 		SET status = $1
@@ -18,9 +18,4 @@ func (p *Postgres) SetNewStatuses(ctx context.Context, status string, ids []uint
 	}
 
 	return nil
-}
-
-func (p *Postgres) UpdateNotifications(context.Context) error {
-	// TODO implement me
-	panic("implement me")
 }

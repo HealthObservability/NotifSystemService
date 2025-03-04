@@ -8,16 +8,16 @@ import (
 	"github.com/HealthObservability/NotifSystemService/pkg/logger"
 )
 
-func (p *Postgres) GetNotifStates(ctx context.Context) ([]domains.NotifState, error) {
+func (p *Postgres) GetNotifStates(ctx context.Context, status string) ([]domains.NotifState, error) {
 	log := logger.GetLogger().WithField("op", "Postgres.getNotifStates")
 
 	q := `
 			SELECT * 
 			FROM notif_states
-			WHERE send_due <= $1 AND status = 'not_sent'
+			WHERE send_due <= $1 AND status = $2
 	`
 
-	rows, err := p.db.QueryContext(ctx, q, time.Now())
+	rows, err := p.db.QueryContext(ctx, q, time.Now(), status)
 	if err != nil {
 		return nil, err
 	} else if rows.Err() != nil {
@@ -35,7 +35,7 @@ func (p *Postgres) GetNotifStates(ctx context.Context) ([]domains.NotifState, er
 		var notif domains.NotifState
 		err := rows.Scan(
 			&notif.ID,
-			&notif.NotificationID,
+			&notif.NotifID,
 			&notif.SendDue,
 			&notif.CreateDate,
 			&notif.Status,

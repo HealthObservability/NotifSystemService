@@ -7,7 +7,7 @@ import (
 	"github.com/lib/pq"
 )
 
-func (p *Postgres) GetNotifs(ctx context.Context, ids []uint64) ([]domains.Notif, error) {
+func (p *Postgres) GetNotifs(ctx context.Context, ids []int64) ([]domains.Notif, error) {
 	log := logger.GetLogger().WithField("op", "GetNotifs")
 
 	q := `

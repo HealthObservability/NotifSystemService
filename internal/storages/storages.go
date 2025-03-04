@@ -7,13 +7,14 @@ import (
 )
 
 type NotificationStates interface {
-	UpdateNotifications(ctx context.Context) error
-	SetNewStatuses(ctx context.Context, status string, ids []uint64) error
-	GetNotifStates(context.Context) ([]domains.NotifState, error)
+	SetNewStatuses(ctx context.Context, status string, ids []int64) error
+	GetNotifStates(ctx context.Context, status string) ([]domains.NotifState, error)
 }
 
 type Notifications interface {
-	GetNotifs(ctx context.Context, ids []uint64) ([]domains.Notif, error)
+	GetNotifs(ctx context.Context, ids []int64) ([]domains.Notif, error)
+	InsertNotification(ctx context.Context, n domains.Notif) (int64, error)
+	InsertNotifState(ctx context.Context, n domains.NotifState) (int64, error)
 }
 
 type Storage struct {
