@@ -2,14 +2,14 @@ package postgres
 
 import (
 	"context"
-	"database/sql"
+	"time"
+
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
 	"github.com/HealthObservability/NotifSystemService/pkg/logger"
-	"time"
 )
 
 func (p *Postgres) GetNotifStates(ctx context.Context) ([]domains.NotifState, error) {
-	log := logger.Logger.WithField("op", "Postgres.getNotifStates")
+	log := logger.GetLogger().WithField("op", "Postgres.getNotifStates")
 
 	q := `
 			SELECT * 
@@ -23,12 +23,12 @@ func (p *Postgres) GetNotifStates(ctx context.Context) ([]domains.NotifState, er
 	} else if rows.Err() != nil {
 		return nil, rows.Err()
 	}
-	defer func(rows *sql.Rows) {
+	defer func() {
 		err := rows.Close()
 		if err != nil {
 			log.WithError(err).Error("Error closing rows")
 		}
-	}(rows)
+	}()
 
 	var notifs []domains.NotifState
 	for rows.Next() {

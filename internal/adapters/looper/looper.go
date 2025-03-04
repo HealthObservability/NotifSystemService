@@ -2,8 +2,9 @@ package looper
 
 import (
 	"context"
-	"github.com/HealthObservability/NotifSystemService/pkg/logger"
 	"time"
+
+	"github.com/HealthObservability/NotifSystemService/pkg/logger"
 )
 
 const loopTime = 1 * time.Second
@@ -16,7 +17,7 @@ func NewLooper() *Looper {
 }
 
 func (l *Looper) Start(ctx context.Context, handler func(ctx context.Context)) {
-	log := logger.Logger.WithField("op", "Looper.LoopRepeater")
+	log := logger.GetLogger().WithField("op", "Looper.LoopRepeater")
 	ticker := time.NewTicker(loopTime)
 
 	for {

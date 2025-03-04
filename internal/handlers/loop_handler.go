@@ -2,11 +2,12 @@ package handlers
 
 import (
 	"context"
+
 	"github.com/HealthObservability/NotifSystemService/pkg/logger"
 )
 
 func (h *Handler) handleLoop(ctx context.Context) {
-	log := logger.Logger.WithField("op", "handler.handleLoop")
+	log := logger.GetLogger().WithField("op", "handler.handleLoop")
 	log.Info("Loop iteration")
 
 	notifStates, err := h.service.GetNotifStates(ctx)

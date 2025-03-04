@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"flag"
 	"github.com/HealthObservability/NotifSystemService/internal/adapters"
 	"github.com/HealthObservability/NotifSystemService/internal/config"
 	"github.com/HealthObservability/NotifSystemService/internal/handlers"
@@ -14,13 +13,13 @@ import (
 	"syscall"
 )
 
-var (
-	isLocal = flag.Bool("local", false, "is it local? can make logs pretty")
-	isDebug = flag.Bool("debug", true, "wanna see debug mode?")
-)
+// var (
+//	isLocal = flag.Bool("local", false, "is it local? can make logs pretty")
+//	isDebug = flag.Bool("debug", true, "wanna see debug mode?")
+// )
 
 func main() {
-	logger.InitLogger(isLocal, isDebug)
+	logger.InitDefaultLogger(logger.WithDebug())
 
 	cfg := config.MustConfigure("./config.yaml")
 

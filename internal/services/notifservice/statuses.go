@@ -10,7 +10,7 @@ func (s *Service) ChangeStatesStatus(ctx context.Context, n []domains.NotifState
 	ids := make([]uint64, length)
 
 	for i := 0; i < length; i++ {
-		ids = append(ids, n[i].ID)
+		ids[i] = n[i].ID
 	}
 
 	if err := s.storage.SetNewStatuses(ctx, newStatus, ids); err != nil {

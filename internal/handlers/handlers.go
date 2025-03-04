@@ -3,11 +3,12 @@ package handlers
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/HealthObservability/NotifSystemService/internal/adapters"
 	"github.com/HealthObservability/NotifSystemService/internal/services"
 	"github.com/HealthObservability/NotifSystemService/pkg/logger"
 	"golang.org/x/sync/errgroup"
-	"time"
 )
 
 const timeout = time.Second * 10
@@ -21,31 +22,32 @@ func New(s *services.Service) *Handler {
 }
 
 func (h *Handler) Run(ctx context.Context, a *adapters.Adapters) {
-	log := logger.Logger.WithField("op", "app.Run")
+	log := logger.GetLogger().WithField("op", "app.Run")
+
+	a.HTTPServ.SetHandlers(h)
 
 	// run here all handlers and services
-	a.Looper.Start(ctx, h.handleLoop)
+	go a.Looper.Start(ctx, h.handleLoop)
+	go a.HTTPServ.MustRun()
+
+	g, gCtx := errgroup.WithContext(ctx)
+	<-gCtx.Done()
 
 	// graceful shutdown
 	tCtx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	g, _ := errgroup.WithContext(ctx)
+	g.Go(func() error {
+		<-gCtx.Done()
+		log.Info("shutting down http server")
 
-	// g.Go(func() error {
-	// 	<-gCtx.Done()
-	// 	log.Info("shutting down postgres...")
-	//
-	// 	_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	// 	defer cancel()
-	//
-	// 	if err := a.Postgres.Shutdown(); err != nil {
-	// 		return fmt.Errorf("failed to shutdown HTTP adapter: %w", err)
-	// 	}
-	//
-	// 	log.Info("http adapter shutdown completed")
-	// 	return nil
-	// })
+		if err := a.HTTPServ.Shutdown(tCtx); err != nil {
+			return fmt.Errorf("failed to shutdown HTTP adapter: %w", err)
+		}
+
+		log.Info("http adapter shutdown completed")
+		return nil
+	})
 
 	if err := g.Wait(); err != nil {
 		log.Errorf("shutdown handlers error: %v", err)

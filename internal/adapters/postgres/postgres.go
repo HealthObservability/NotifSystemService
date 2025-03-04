@@ -4,11 +4,12 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
+	"net"
+
 	"github.com/HealthObservability/NotifSystemService/internal/config"
 	"github.com/HealthObservability/NotifSystemService/pkg/logger"
 	_ "github.com/lib/pq" // postgres
-	"log"
-	"net"
 )
 
 type Postgres struct {
@@ -17,7 +18,7 @@ type Postgres struct {
 
 func MustNew(cfg config.Postgres) *Postgres {
 	db := mustInitConn(cfg)
-	logger.Logger.WithField("op", "postgres.MustNew").Info("Connected to postgres successfully")
+	logger.GetLogger().WithField("op", "postgres.MustNew").Info("Connected to postgres successfully")
 
 	return &Postgres{db}
 }

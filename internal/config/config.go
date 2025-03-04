@@ -27,7 +27,7 @@ type HTTPServer struct {
 // MustConfigure is a configurator for a config.
 // @params: configPath is a path to config. is used by tests from any package with configuration.
 func MustConfigure(configPath string) Config {
-	log := logger.Logger.WithField("op", "config.MustConfigure")
+	log := logger.GetLogger().WithField("op", "config.MustConfigure")
 
 	config := &Config{}
 	err := cleanenv.ReadConfig(configPath, config)
