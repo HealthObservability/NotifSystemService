@@ -7,7 +7,8 @@ import (
 )
 
 type Config struct {
-	Postgres Postgres `yaml:"postgres"`
+	Postgres   Postgres   `yaml:"postgres"`
+	HTTPServer HTTPServer `yaml:"http_server"`
 }
 
 type Postgres struct {
@@ -16,6 +17,11 @@ type Postgres struct {
 	User     string `yaml:"POSTGRES_USER" validate:"required"`
 	Password string `yaml:"POSTGRES_PASSWORD" validate:"required"`
 	Database string `yaml:"POSTGRES_DB" validate:"required"`
+}
+
+type HTTPServer struct {
+	Port         string   `yaml:"HTTP_PORT" validate:"required"`
+	AllowOrigins []string `yaml:"ALLOW_ORIGINS"`
 }
 
 // MustConfigure is a configurator for a config.
