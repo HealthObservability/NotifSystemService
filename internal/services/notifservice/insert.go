@@ -17,7 +17,7 @@ func (s *Service) AddNotification(ctx context.Context, n domains.Notif) (int64, 
 	var notifState domains.NotifState
 	notifState.NotifID = notifID
 	notifState.CreateDate = n.CreatedAt
-	notifState.Status = SentStatus
+	notifState.Status = NotSentStatus
 
 	_, err = s.storage.Notifications.InsertNotifState(ctx, notifState)
 	if err != nil {

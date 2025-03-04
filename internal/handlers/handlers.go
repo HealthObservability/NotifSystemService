@@ -3,12 +3,11 @@ package handlers
 import (
 	"context"
 	"fmt"
-	"time"
-
 	"github.com/HealthObservability/NotifSystemService/internal/adapters"
 	"github.com/HealthObservability/NotifSystemService/internal/services"
 	"github.com/HealthObservability/NotifSystemService/pkg/logger"
 	"golang.org/x/sync/errgroup"
+	"time"
 )
 
 const timeout = time.Second * 10
@@ -27,7 +26,7 @@ func (h *Handler) Run(ctx context.Context, a *adapters.Adapters) {
 	a.HTTPServ.SetHandlers(h)
 
 	// run here all handlers and services
-	go a.Looper.Start(ctx, h.handleLoop)
+	//go a.Looper.Start(ctx, h.handleLoop)
 	go a.HTTPServ.MustRun()
 
 	g, gCtx := errgroup.WithContext(ctx)

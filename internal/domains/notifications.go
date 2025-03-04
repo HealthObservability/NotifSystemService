@@ -15,9 +15,9 @@ type NotifState struct {
 type Notif struct {
 	ID             int64      `json:"id"`
 	CreatedAt      time.Time  `json:"created_at"`
-	ToID           int64      `json:"to_id"`
-	Message        string     `json:"message"`
-	RepeatInterval string     `json:"repeat_interval"`
 	LastSent       *time.Time `json:"last_sent_timestamp"`
-	Since          time.Time  `json:"since_timestamp"`
+	ToID           int64      `json:"to_id" validate:"required"`
+	Message        string     `json:"message" validate:"required"`
+	RepeatInterval string     `json:"repeat_interval" validate:"required,oneof=no-repeat minute half-hour hour day week month"`
+	Since          time.Time  `json:"since_timestamp" validate:"required"`
 }

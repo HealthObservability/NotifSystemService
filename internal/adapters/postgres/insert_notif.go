@@ -3,6 +3,7 @@ package postgres
 import (
 	"context"
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
+	"log"
 )
 
 func (p *Postgres) InsertNotification(ctx context.Context, n domains.Notif) (int64, error) {
@@ -13,7 +14,7 @@ func (p *Postgres) InsertNotification(ctx context.Context, n domains.Notif) (int
 		RETURNING id;
 	`
 
-	res, err := p.db.ExecContext(
+	rows, err := p.db.QueryContext(
 		ctx,
 		q,
 		n.CreatedAt,
@@ -26,10 +27,17 @@ func (p *Postgres) InsertNotification(ctx context.Context, n domains.Notif) (int
 	if err != nil {
 		return 0, err
 	}
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println("Error closing rows: ", err)
+		}
+	}()
 
-	lastID, err := res.LastInsertId()
-	if err != nil {
-		return 0, err
+	var lastID int64
+	for rows.Next() {
+		if err := rows.Scan(&lastID); err != nil {
+			return 0, err
+		}
 	}
 
 	return lastID, nil
@@ -43,7 +51,7 @@ func (p *Postgres) InsertNotifState(ctx context.Context, n domains.NotifState) (
 		RETURNING id;
 	`
 
-	res, err := p.db.ExecContext(
+	rows, err := p.db.QueryContext(
 		ctx,
 		q,
 		n.NotifID,
@@ -54,10 +62,17 @@ func (p *Postgres) InsertNotifState(ctx context.Context, n domains.NotifState) (
 	if err != nil {
 		return 0, err
 	}
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Println("Error closing rows: ", err)
+		}
+	}()
 
-	lastID, err := res.LastInsertId()
-	if err != nil {
-		return 0, err
+	var lastID int64
+	for rows.Next() {
+		if err := rows.Scan(&lastID); err != nil {
+			return 0, err
+		}
 	}
 
 	return lastID, nil
