@@ -1,43 +1,40 @@
 package logger
 
-import "github.com/sirupsen/logrus"
+import (
+	"github.com/sirupsen/logrus"
+)
 
-var Logger *logger
+var entry *logrus.Entry
 
-type logger struct {
+var fieldMap = logrus.FieldMap{
+	logrus.FieldKeyTime:  ".timestamp",
+	logrus.FieldKeyLevel: "@level",
+	logrus.FieldKeyMsg:   "@message",
+	logrus.FieldKeyFunc:  "z_caller",
+}
+
+type Logger struct {
 	*logrus.Entry
 }
 
-func InitLogger(isLocal, isDebug *bool) {
-	fieldMap := logrus.FieldMap{
-		logrus.FieldKeyTime:  ".timestamp",
-		logrus.FieldKeyLevel: "@level",
-		logrus.FieldKeyMsg:   "@message",
-		logrus.FieldKeyFunc:  "z_caller",
+func GetLogger() *Logger {
+	if entry == nil {
+		panic("logger not initialized")
 	}
 
-	Logger = &logger{}
-	Logger.Entry = logrus.NewEntry(logrus.New())
+	return &Logger{entry}
+}
 
-	Logger.Logger.SetLevel(logrus.InfoLevel)
-	Logger.Logger.SetFormatter(&logrus.JSONFormatter{
-		//TimestampFormat: "2006-01-02 15:04:05",
+func InitDefaultLogger(opts ...func(*logrus.Logger)) {
+	log := logrus.New()
+	log.SetLevel(logrus.InfoLevel)
+	log.Formatter = &logrus.JSONFormatter{
 		FieldMap: fieldMap,
-	})
-
-	if isLocal != nil && *isLocal {
-		logInit := logrus.New()
-		logInit.Formatter = &logrus.TextFormatter{
-			ForceColors:      true,
-			DisableTimestamp: false,
-			FullTimestamp:    true,
-			FieldMap:         fieldMap,
-		}
-		newEntry := logrus.NewEntry(logInit)
-		Logger.Entry = newEntry
 	}
 
-	if isDebug != nil && *isDebug || isDebug == nil {
-		Logger.Logger.SetLevel(logrus.DebugLevel)
+	for _, opt := range opts {
+		opt(log)
 	}
+
+	entry = logrus.NewEntry(log)
 }
