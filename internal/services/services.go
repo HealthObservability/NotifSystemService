@@ -1,8 +1,6 @@
 package services
 
 import (
-	"context"
-	"github.com/HealthObservability/NotifSystemService/internal/domains"
 	"github.com/HealthObservability/NotifSystemService/internal/services/notifservice"
 	"github.com/HealthObservability/NotifSystemService/internal/services/senderservice"
 	"github.com/HealthObservability/NotifSystemService/internal/storages"

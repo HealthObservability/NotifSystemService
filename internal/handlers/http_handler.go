@@ -26,7 +26,7 @@ func (h *Handler) AddNotification(c *gin.Context) {
 		return
 	}
 
-	id, err := h.service.Notif.AddNotification(c, newNotif)
+	id, err := h.service.NotifService.AddNotification(c, newNotif)
 	if err != nil {
 		log.WithError(err).Error("Cannot add notification")
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
