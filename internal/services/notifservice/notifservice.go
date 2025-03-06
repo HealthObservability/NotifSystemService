@@ -17,6 +17,7 @@ type NotifService interface {
 	GetNotifStates(ctx context.Context) ([]domains.NotifState, error)
 	ChangeStatesStatus(ctx context.Context, n []domains.NotifState, newStatus string) error
 	AddNotification(ctx context.Context, n domains.Notif) (int64, error)
+	DeleteNotif(ctx context.Context, notifID int64) error
 	//UpdateNotification(ctx context.Context, n domains.Notif) error
 	//DeleteNotification(ctx context.Context, id uint64) error
 }

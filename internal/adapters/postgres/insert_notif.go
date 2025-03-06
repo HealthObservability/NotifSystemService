@@ -26,6 +26,8 @@ func (p *Postgres) InsertNotification(ctx context.Context, n domains.Notif) (int
 	)
 	if err != nil {
 		return 0, err
+	} else if rows != nil && rows.Err() != nil {
+		return 0, rows.Err()
 	}
 	defer func() {
 		if err := rows.Close(); err != nil {
@@ -61,6 +63,8 @@ func (p *Postgres) InsertNotifState(ctx context.Context, n domains.NotifState) (
 	)
 	if err != nil {
 		return 0, err
+	} else if rows != nil && rows.Err() != nil {
+		return 0, rows.Err()
 	}
 	defer func() {
 		if err := rows.Close(); err != nil {

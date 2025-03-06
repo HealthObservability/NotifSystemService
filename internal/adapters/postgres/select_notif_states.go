@@ -20,7 +20,7 @@ func (p *Postgres) GetNotifStates(ctx context.Context, status string) ([]domains
 	rows, err := p.db.QueryContext(ctx, q, time.Now(), status)
 	if err != nil {
 		return nil, err
-	} else if rows.Err() != nil {
+	} else if rows != nil && rows.Err() != nil {
 		return nil, rows.Err()
 	}
 	defer func() {

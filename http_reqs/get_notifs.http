@@ -1,0 +1,8 @@
+GET {{url}}/notifications
+###
+
+
+GET {{url}}/notifications/2
+###
+
+//  "last_sent_timestamp": "",

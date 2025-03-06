@@ -21,6 +21,8 @@ type HTTPServAdapter struct {
 
 type HTTPHandler interface {
 	AddNotification(c *gin.Context)
+	DeleteNotification(c *gin.Context)
+	GetNotifs(c *gin.Context)
 }
 
 func New(cfg config.HTTPServer) *HTTPServAdapter {
@@ -34,6 +36,9 @@ func (a *HTTPServAdapter) SetHandlers(handler HTTPHandler) {
 	gin.SetMode(gin.ReleaseMode)
 	mainRouter := gin.New()
 	mainRouter.POST("/notifications", handler.AddNotification)
+	mainRouter.DELETE("/notifications/:id", handler.DeleteNotification)
+	mainRouter.GET("/notifications/:id", handler.GetNotifs)
+	mainRouter.GET("/notifications", handler.GetNotifs)
 	// mainRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	if len(a.origins) > 0 {
