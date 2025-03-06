@@ -26,7 +26,7 @@ func (h *Handler) Run(ctx context.Context, a *adapters.Adapters) {
 	a.HTTPServ.SetHandlers(h)
 
 	// run here all handlers and services
-	//go a.Looper.Start(ctx, h.handleLoop)
+	go a.Looper.Start(ctx, h.handleLoop)
 	go a.HTTPServ.MustRun()
 
 	g, gCtx := errgroup.WithContext(ctx)

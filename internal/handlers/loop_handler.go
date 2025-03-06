@@ -28,4 +28,6 @@ func (h *Handler) handleLoop(ctx context.Context) {
 	}
 
 	log.WithField("full_notifs", fullNotifs).Debug("Got full notifs")
+
+	// TODO send each notifications
 }

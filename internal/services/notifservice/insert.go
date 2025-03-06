@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+func createSendDue(lastSent time.Time, interval string) {
+	
+}
+
 func (s *Service) AddNotification(ctx context.Context, n domains.Notif) (int64, error) {
 	n.CreatedAt = time.Now()
 
