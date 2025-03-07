@@ -3,7 +3,6 @@ package senderservice
 import (
 	"context"
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
-	"github.com/HealthObservability/NotifSystemService/pkg/logger"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -36,27 +35,28 @@ func New() *Service {
 	return &Service{}
 }
 
-func (s Service) SendNotifications(ctx context.Context, notifs []domains.Notif) {
-	log := logger.GetLogger().WithField("op", "Service.SendNotifications")
+func (s Service) SendNotifications(ctx context.Context, notifs []domains.Notif) error {
+	// log := logger.GetLogger().WithField("op", "Service.SendNotifications")
 
-	//TODO implement me
+	// TODO implement me
 
 	g, gCtx := errgroup.WithContext(ctx)
 
 	// FIXME SEND each notif to sender service
 	for _, notif := range notifs {
-		notif := notif
+		notifCopy := notif
 		g.Go(func() error {
-			err := s.SendNotification(gCtx, notif)
+			err := s.SendNotification(gCtx, notifCopy)
 			if err != nil {
 				return err
 			}
-
 			return nil
 		})
 	}
 
 	if err := g.Wait(); err != nil {
-		log.WithError(err).Fatal("failed to send all notifications")
+		return err
 	}
+
+	return nil
 }

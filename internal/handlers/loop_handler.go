@@ -28,6 +28,8 @@ func (h *Handler) handleLoop(ctx context.Context) {
 	}
 
 	log.WithField("full_notifs", fullNotifs).Debug("Got full notifs")
-
-	// TODO send each notifications
+	
+	if err := h.service.SenderService.SendNotifications(ctx, fullNotifs); err != nil {
+		log.WithError(err).Error("Error sending notifications")
+	}
 }
