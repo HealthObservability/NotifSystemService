@@ -2,37 +2,28 @@ package senderservice
 
 import (
 	"context"
+	"github.com/HealthObservability/NotifSystemService/internal/adapters"
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
 	"golang.org/x/sync/errgroup"
+	"time"
 )
 
 type SenderService interface {
 	SendNotifications(ctx context.Context, notifs []domains.Notif) error
 	SendNotification(ctx context.Context, notif domains.Notif) error
-	ReceiveCallback(ctx context.Context) error
-	ProcessCallback(ctx context.Context, cb domains.SenderCallback) error
 }
 
 type Service struct {
+	adapters *adapters.Adapters
+}
+
+func New(a *adapters.Adapters) *Service {
+	return &Service{adapters: a}
 }
 
 func (s Service) SendNotification(ctx context.Context, notif domains.Notif) error {
 	//TODO implement me
 	return nil
-}
-
-func (s Service) ReceiveCallback(ctx context.Context) error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s Service) ProcessCallback(ctx context.Context, cb domains.SenderCallback) error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func New() *Service {
-	return &Service{}
 }
 
 func (s Service) SendNotifications(ctx context.Context, notifs []domains.Notif) error {
@@ -50,6 +41,11 @@ func (s Service) SendNotifications(ctx context.Context, notifs []domains.Notif) 
 			if err != nil {
 				return err
 			}
+
+			// FIXME it is a mock
+			time.Sleep(time.Second)
+			// update status
+			// FIXME
 			return nil
 		})
 	}

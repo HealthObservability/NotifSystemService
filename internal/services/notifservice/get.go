@@ -7,6 +7,11 @@ import (
 
 func (s *Service) GetNotifs(ctx context.Context, n []domains.NotifState) ([]domains.Notif, error) {
 	length := len(n)
+
+	if length == 0 {
+		return []domains.Notif{}, nil
+	}
+
 	ids := make([]int64, length)
 	for i := 0; i < length; i++ {
 		ids[i] = n[i].NotifID

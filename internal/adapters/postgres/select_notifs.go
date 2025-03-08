@@ -12,7 +12,7 @@ func (p *Postgres) GetNotifs(ctx context.Context, ids []int64) ([]domains.Notif,
 	log := logger.GetLogger().WithField("op", "GetNotifs")
 
 	q := `
-			SELECT id, creation_timestamp, id_to_send, text, repeat_interval, last_notif, since_time
+			SELECT id, creation_timestamp, id_to_send, text, repeat_interval, last_scheduled_time, since_time
 			FROM notif_info
 	`
 
@@ -47,7 +47,7 @@ func (p *Postgres) GetNotifs(ctx context.Context, ids []int64) ([]domains.Notif,
 			&notif.ToID,
 			&notif.Message,
 			&notif.RepeatInterval,
-			&notif.LastSent,
+			&notif.LastScheduled,
 			&notif.Since,
 		)
 		if err != nil {

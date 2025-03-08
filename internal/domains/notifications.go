@@ -13,11 +13,11 @@ type NotifState struct {
 
 // Notif is an object that contains in any key-value or document-based db.
 type Notif struct {
-	ID             int64      `json:"id"`
-	CreatedAt      time.Time  `json:"created_at"`
-	LastSent       *time.Time `json:"last_sent_timestamp"`
-	ToID           int64      `json:"to_id" validate:"required"`
-	Message        string     `json:"message" validate:"required"`
-	RepeatInterval string     `json:"repeat_interval" validate:"required,oneof=no-repeat minute half-hour hour day week month"`
-	Since          time.Time  `json:"since_timestamp" validate:"required"`
+	ID             int64     `json:"id"`
+	CreatedAt      time.Time `json:"created_at"`
+	LastScheduled  time.Time `json:"last_sent_timestamp"`
+	ToID           int64     `json:"to_id" validate:"required"`
+	Message        string    `json:"message" validate:"required"`
+	RepeatInterval string    `json:"repeat_interval" validate:"required,oneof=no-repeat minute half-hour hour day week month"`
+	Since          time.Time `json:"since_timestamp" validate:"required"`
 }

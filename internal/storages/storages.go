@@ -16,6 +16,7 @@ type Notifications interface {
 	InsertNotification(ctx context.Context, n domains.Notif) (int64, error)
 	InsertNotifState(ctx context.Context, n domains.NotifState) (int64, error)
 	DeleteNotif(ctx context.Context, notifID int64) error
+	ScheduleNotification(ctx context.Context, n domains.NotifState) error
 }
 
 type Storage struct {

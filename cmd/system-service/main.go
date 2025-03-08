@@ -25,7 +25,7 @@ func main() {
 
 	ad := adapters.NewAdapters(cfg)
 	st := storages.MustNew(ad)
-	srv := services.MustNew(st)
+	srv := services.MustNew(st, ad)
 	h := handlers.New(srv)
 
 	ctx, stop := signal.NotifyContext(

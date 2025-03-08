@@ -18,32 +18,13 @@ const (
 	IntervalMonth    = "month"
 )
 
-func createSendDue(lastSent time.Time, interval string) (time.Time, error) {
-	sendDue := lastSent
-	switch interval {
-	case IntervalNoRepeat:
-		sendDue = lastSent
-	case IntervalMinute:
-		sendDue = lastSent.Add(time.Minute)
-	case IntervalHalfHour:
-		sendDue = lastSent.Add(30 * time.Minute)
-	case IntervalHour:
-		sendDue = lastSent.Add(time.Hour)
-	case IntervalDay:
-		sendDue = lastSent.AddDate(0, 0, 1)
-	case IntervalWeek:
-		sendDue = lastSent.AddDate(0, 0, 7)
-	case IntervalMonth:
-		sendDue = lastSent.AddDate(0, 1, 0)
-	default:
-		return time.Time{}, errors.New("unknown interval")
-	}
-
-	return sendDue, nil
-}
-
 func (s *Service) AddNotification(ctx context.Context, n domains.Notif) (int64, error) {
 	n.CreatedAt = time.Now()
+	n.LastScheduled = n.Since
+
+	if n.Since.Before(n.CreatedAt) {
+		return 0, errors.New("since time is in the past")
+	}
 
 	notifID, err := s.storage.Notifications.InsertNotification(ctx, n)
 	if err != nil {
@@ -53,7 +34,7 @@ func (s *Service) AddNotification(ctx context.Context, n domains.Notif) (int64, 
 	var notifState domains.NotifState
 	notifState.NotifID = notifID
 	notifState.CreateDate = n.CreatedAt
-	notifState.SendDue = n.Since
+	notifState.SendDue = n.LastScheduled
 	notifState.Status = NotSentStatus
 
 	_, err = s.storage.Notifications.InsertNotifState(ctx, notifState)

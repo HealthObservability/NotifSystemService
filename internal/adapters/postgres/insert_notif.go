@@ -9,7 +9,7 @@ import (
 func (p *Postgres) InsertNotification(ctx context.Context, n domains.Notif) (int64, error) {
 	q := `
 		INSERT INTO notif_info
-		(creation_timestamp, id_to_send, text, repeat_interval, last_notif, since_time)
+		(creation_timestamp, id_to_send, text, repeat_interval, last_scheduled_time, since_time)
 		VALUES ($1, $2, $3, $4, $5, $6)
 		RETURNING id;
 	`
@@ -21,7 +21,7 @@ func (p *Postgres) InsertNotification(ctx context.Context, n domains.Notif) (int
 		n.ToID,
 		n.Message,
 		n.RepeatInterval,
-		n.LastSent,
+		n.LastScheduled,
 		n.Since,
 	)
 	if err != nil {
