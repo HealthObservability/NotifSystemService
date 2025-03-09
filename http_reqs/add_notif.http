@@ -5,7 +5,7 @@ Content-Type: application/json
   "to_id": 1234,
   "message": "какое-то оповещение",
   "repeat_interval": "minute",
-  "since_timestamp": "2025-03-08T21:35:33+03:00"
+  "since_timestamp": "2025-03-09T13:03:00+03:00"
 }
 ###
 

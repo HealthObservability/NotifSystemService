@@ -4,15 +4,21 @@ import (
 	"context"
 	"errors"
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
+	"github.com/HealthObservability/NotifSystemService/pkg/logger"
 	"golang.org/x/sync/errgroup"
 	"time"
 )
 
 func calculateScheduledTime(lastScheduled time.Time, interval string) (time.Time, error) {
-	now := time.Now()
+	log := logger.GetLogger().WithField("op", "calculateScheduledTime")
+	now := time.Now().UTC()
+	lastScheduled = lastScheduled.UTC()
 
-	// Проверяем, сколько времени прошло с последнего запланированного уведомления
-	timeDiff := now.Sub(lastScheduled)
+	timeDiff := lastScheduled.Sub(now)
+	if timeDiff < 0 {
+		timeDiff = -1 * timeDiff
+	}
+	log.Debugf("Time difference: %v", timeDiff)
 
 	var scheduledTime time.Time
 
@@ -23,6 +29,7 @@ func calculateScheduledTime(lastScheduled time.Time, interval string) (time.Time
 	case IntervalMinute:
 		if timeDiff >= time.Minute {
 			elapsedIntervals := int(timeDiff / time.Minute)
+			log.Debugf("Elapsed intervals: %v", elapsedIntervals)
 			scheduledTime = lastScheduled.Add(time.Duration(elapsedIntervals) * time.Minute)
 		} else {
 			scheduledTime = lastScheduled.Add(time.Minute)
@@ -72,6 +79,8 @@ func calculateScheduledTime(lastScheduled time.Time, interval string) (time.Time
 		return time.Time{}, errors.New("unknown interval")
 	}
 
+	log.Debugf("New scheduled time: %v", scheduledTime)
+
 	return scheduledTime, nil
 }
 
@@ -94,7 +103,7 @@ func (s *Service) ScheduleNotifications(ctx context.Context, n []domains.Notif) 
 			state := domains.NotifState{
 				NotifID:    notif.ID,
 				SendDue:    scheduledTime,
-				CreateDate: time.Now(),
+				CreateDate: time.Now().UTC(),
 				Status:     NotSentStatus,
 			}
 

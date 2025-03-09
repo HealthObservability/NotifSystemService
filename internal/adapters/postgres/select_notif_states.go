@@ -17,7 +17,7 @@ func (p *Postgres) GetNotifStates(ctx context.Context, status string) ([]domains
 			WHERE send_due <= $1 AND status = $2
 	`
 
-	rows, err := p.db.QueryContext(ctx, q, time.Now(), status)
+	rows, err := p.db.QueryContext(ctx, q, time.Now().UTC(), status)
 	if err != nil {
 		return nil, err
 	} else if rows != nil && rows.Err() != nil {

@@ -1,4 +1,4 @@
-DELETE {{url}}/notifications/8
+DELETE {{url}}/notifications/22
 
 
 //  "last_sent_timestamp": "",

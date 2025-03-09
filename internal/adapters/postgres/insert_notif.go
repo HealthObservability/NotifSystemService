@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"fmt"
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
 	"log"
 )
@@ -13,6 +14,9 @@ func (p *Postgres) InsertNotification(ctx context.Context, n domains.Notif) (int
 		VALUES ($1, $2, $3, $4, $5, $6)
 		RETURNING id;
 	`
+
+	fmt.Println("n.Since:", n.Since)
+	fmt.Println("n.LastScheduled:", n.LastScheduled)
 
 	rows, err := p.db.QueryContext(
 		ctx,

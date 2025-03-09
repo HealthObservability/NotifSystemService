@@ -3,6 +3,7 @@ package notifservice
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
 	"time"
 )
@@ -19,8 +20,12 @@ const (
 )
 
 func (s *Service) AddNotification(ctx context.Context, n domains.Notif) (int64, error) {
-	n.CreatedAt = time.Now()
+	n.CreatedAt = time.Now().UTC()
+	n.Since = n.Since.UTC()
 	n.LastScheduled = n.Since
+
+	fmt.Println("n.Since:", n.Since)
+	fmt.Println("n.LastScheduled:", n.LastScheduled)
 
 	if n.Since.Before(n.CreatedAt) {
 		return 0, errors.New("since time is in the past")
