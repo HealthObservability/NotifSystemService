@@ -15,12 +15,13 @@ check for [DRAW.IO STRUCTURE FILE](notif.drawio)
 
 ## TODO
 - [x] fetch notifications status table every N seconds
+- [x] send notification after fetch to sender service by http
+- [x] schedule notification time
+- [x] schedule repeated notification without spamming on server failure
 
 
-- [ ] update notifications on user preferences changes
-- [ ] send notification after fetch to sender service by http
-- [ ] Try Amazon Cognito to maintain users info
-- [ ] Try Amazon DynamoDB for User preferences
+- [ ] User preferences
+- [ ] schedule notifications based on user preferences
 
 _P.S.
 reference: https://www.notificationapi.com/_
