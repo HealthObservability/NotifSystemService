@@ -29,6 +29,10 @@ func (s *Service) GetNotifs(ctx context.Context, n []domains.NotifState) ([]doma
 	return notifs, nil
 }
 
+func (s *Service) GetAllNotifs(ctx context.Context) ([]domains.Notif, error) {
+	return s.storage.GetNotifs(ctx, nil)
+}
+
 func (s *Service) GetNotifStates(ctx context.Context) ([]domains.NotifState, error) {
 	notifs, err := s.storage.NotificationStates.GetNotifStates(ctx, NotSentStatus)
 	if err != nil {

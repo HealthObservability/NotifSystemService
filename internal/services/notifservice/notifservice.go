@@ -14,6 +14,7 @@ const (
 
 type NotifService interface {
 	GetNotifs(ctx context.Context, n []domains.NotifState) ([]domains.Notif, error)
+	GetAllNotifs(ctx context.Context) ([]domains.Notif, error)
 	GetNotifStates(ctx context.Context) ([]domains.NotifState, error)
 	UpdateSendStatus(ctx context.Context, n []domains.NotifState, newStatus string) error
 	AddNotification(ctx context.Context, n domains.Notif) (int64, error)

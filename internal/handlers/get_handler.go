@@ -21,18 +21,25 @@ func (h *Handler) GetNotifs(c *gin.Context) {
 		log.WithError(err).Warn("Invalid id param")
 	}
 
-	var ids []domains.NotifState
+	var notifs []domains.Notif
 	if err == nil {
+		var ids []domains.NotifState
 		ids = append(ids, domains.NotifState{NotifID: id})
+		notifs, err = h.service.NotifService.GetNotifs(c, ids)
+		if err != nil {
+			log.WithError(err).Error("Error getting notifs")
+			c.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
+	} else {
+		notifs, err = h.service.NotifService.GetAllNotifs(c)
+		if err != nil {
+			log.WithError(err).Error("Error getting notifs")
+			c.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
 	}
 
-	notifs, err := h.service.NotifService.GetNotifs(c, ids)
-	if err != nil {
-		log.WithError(err).Error("Error getting notifs")
-		c.AbortWithStatus(http.StatusInternalServerError)
-		return
-	}
-	
 	if len(notifs) == 0 {
 		log.WithError(err).Warn("notifs are empty")
 		c.JSON(http.StatusNotFound, gin.H{"error": "notifs not found"})
