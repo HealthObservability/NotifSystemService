@@ -1,0 +1,86 @@
+openapi: 3.0.3
+info:
+  title: Title
+  description: Title
+  version: 1.0.0
+servers:
+  - url: 'https'
+tags:
+  - name: notifications
+paths:
+  /pet:
+    post:
+      tags:
+        - notifications
+      summary: create new notification
+      description: since_timestamp should be greater than now
+      operationId: addNotification
+      requestBody:
+        description: Create a new notification
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewNotification'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessInsertResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+
+components:
+  schemas:
+    NewNotification:
+      type: object
+      properties:
+        to_id:
+          type: integer
+        message:
+          type: string
+        repeat_interval:
+          type: string
+          enum:
+            - no-repeat
+            - minute
+            - half-hour
+            - hour
+            - day
+            - week
+            - month
+        since_timestamp:
+          type: string
+          example: 2026-03-09T13:03:00+03:00
+      required:
+        - to_id
+        - message
+        - repeat_interval
+        - since_timestamp
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+    SuccessInsertResponse:
+      type: object
+      properties:
+        id:
+          type: integer
