@@ -42,6 +42,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+
   /notifications/{notif_id}:
     delete:
       tags:
@@ -70,6 +71,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      tags:
+        - notifications
+      summary: get notification
+      description: get notification by id
+      operationId: getNotification
+      parameters:
+        - name: notif_id
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+        '404':
+          description: Not found at db
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
 
 
 components:
@@ -105,8 +139,42 @@ components:
       properties:
         error:
           type: string
+
     SuccessInsertResponse:
       type: object
       properties:
         id:
           type: integer
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+        to_id:
+          type: integer
+        repeat_interval:
+          type: string
+          enum:
+            - minute
+            - no-repeat
+            - half-hour
+            - hour
+            - day
+            - week
+            - month
+        message:
+          type: string
+          example: "this is an any notification"
+        created_at:
+          type: string
+          example: "2025-03-11T19:27:49.367887Z"
+        last_sent_timestamp:
+          type: string
+          example: "2026-03-09T10:03:00Z"
+        since_timestamp:
+          type: string
+          example: "2026-03-09T10:03:00Z"
+
+
+          
