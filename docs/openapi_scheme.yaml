@@ -1,14 +1,14 @@
 openapi: 3.0.3
 info:
-  title: Title
-  description: Title
-  version: 1.0.0
+  title: NotifSystemService
+  description: Service that fetches notif's dbs and pushes notifs to notif service
+  version: 0.1.0
 servers:
   - url: 'https'
 tags:
   - name: notifications
 paths:
-  /pet:
+  /notifications:
     post:
       tags:
         - notifications
@@ -41,10 +41,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-      security:
-        - petstore_auth:
-            - write:pets
-            - read:pets
+
+  /notifications/{notif_id}:
+    delete:
+      tags:
+        - notifications
+      summary: delete a notification
+      operationId: delNotification
+      parameters:
+        - name: notif_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the notification to delete
+      responses:
+        '204':
+          description: Successful operation
+        '404':
+          description: not found at db
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
 
 components:
   schemas:
