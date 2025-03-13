@@ -5,7 +5,7 @@ import (
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
 )
 
-func (p *Postgres) ScheduleNotification(ctx context.Context, n domains.NotifState) error {
+func (p *Postgres) InsertScheduled(ctx context.Context, n domains.NotifState) error {
 	tx, err := p.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err

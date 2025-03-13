@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-func (p *Postgres) InsertNotification(ctx context.Context, n domains.Notif) (int64, error) {
+func (p *Postgres) InsertNotif(ctx context.Context, n domains.Notif) (int64, error) {
 	q := `
 		INSERT INTO notif_info
 		(creation_timestamp, id_to_send, text, repeat_interval, last_scheduled_time, since_time)
@@ -49,7 +49,7 @@ func (p *Postgres) InsertNotification(ctx context.Context, n domains.Notif) (int
 	return lastID, nil
 }
 
-func (p *Postgres) InsertNotifState(ctx context.Context, n domains.NotifState) (int64, error) {
+func (p *Postgres) InsertState(ctx context.Context, n domains.NotifState) (int64, error) {
 	q := `
 		INSERT INTO notif_states 
 		    (notif_id, send_due, creation_timestamp, status)

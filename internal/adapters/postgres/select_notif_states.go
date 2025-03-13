@@ -8,8 +8,8 @@ import (
 	"github.com/HealthObservability/NotifSystemService/pkg/logger"
 )
 
-func (p *Postgres) GetNotifStates(ctx context.Context, status string) ([]domains.NotifState, error) {
-	log := logger.GetLogger().WithField("op", "Postgres.getNotifStates")
+func (p *Postgres) GetStatesByStatus(ctx context.Context, status string) ([]domains.NotifState, error) {
+	log := logger.GetLogger().WithField("op", "Postgres.GetStatesByStatus")
 
 	q := `
 			SELECT * 

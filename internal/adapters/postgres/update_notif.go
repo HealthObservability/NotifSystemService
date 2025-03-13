@@ -5,7 +5,7 @@ import (
 	"github.com/lib/pq"
 )
 
-func (p *Postgres) SetNewStatuses(ctx context.Context, status string, ids []int64) error {
+func (p *Postgres) UpdateStatuses(ctx context.Context, status string, ids []int64) error {
 	q := `
 		UPDATE notif_states
 		SET status = $1

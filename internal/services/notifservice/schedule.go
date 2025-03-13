@@ -107,7 +107,7 @@ func (s *Service) ScheduleNotifications(ctx context.Context, n []domains.Notif) 
 				Status:     NotSentStatus,
 			}
 
-			if err = s.storage.Notifications.ScheduleNotification(ctx, state); err != nil {
+			if err = s.storage.Notifications.InsertScheduled(ctx, state); err != nil {
 				return err
 			}
 

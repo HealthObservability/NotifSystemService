@@ -13,7 +13,7 @@ func (s *Service) UpdateSendStatus(ctx context.Context, n []domains.NotifState, 
 		ids[i] = n[i].ID
 	}
 
-	if err := s.storage.SetNewStatuses(ctx, status, ids); err != nil {
+	if err := s.storage.UpdateStatuses(ctx, status, ids); err != nil {
 		return err
 	}
 

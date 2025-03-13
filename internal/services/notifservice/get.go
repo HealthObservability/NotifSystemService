@@ -34,7 +34,7 @@ func (s *Service) GetAllNotifs(ctx context.Context) ([]domains.Notif, error) {
 }
 
 func (s *Service) GetNotifStates(ctx context.Context) ([]domains.NotifState, error) {
-	notifs, err := s.storage.NotificationStates.GetNotifStates(ctx, NotSentStatus)
+	notifs, err := s.storage.NotificationStates.GetStatesByStatus(ctx, NotSentStatus)
 	if err != nil {
 		return nil, err
 	}

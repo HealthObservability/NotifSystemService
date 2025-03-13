@@ -53,7 +53,7 @@ func (h *Handler) Run(ctx context.Context, a *adapters.Adapters) {
 	}
 
 	g.Go(func() error {
-		if err := a.Postgres.Shutdown(tCtx); err != nil {
+		if err := a.Database.Shutdown(tCtx); err != nil {
 			return fmt.Errorf("failed to shutdown postgres adapter: %w", err)
 		}
 		log.Info("postgres adapter shutdown completed")
