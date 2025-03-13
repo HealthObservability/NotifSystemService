@@ -17,16 +17,16 @@ type Service struct {
 	adapters *adapters.Adapters
 }
 
-func New(a *adapters.Adapters) *Service {
+func New(a *adapters.Adapters) SenderService {
 	return &Service{adapters: a}
 }
 
-func (s Service) SendNotification(ctx context.Context, notif domains.Notif) error {
+func (s *Service) SendNotification(ctx context.Context, notif domains.Notif) error {
 	//TODO implement me
 	return nil
 }
 
-func (s Service) SendNotifications(ctx context.Context, notifs []domains.Notif) error {
+func (s *Service) SendNotifications(ctx context.Context, notifs []domains.Notif) error {
 	// log := logger.GetLogger().WithField("op", "Service.SendNotifications")
 
 	// TODO implement me

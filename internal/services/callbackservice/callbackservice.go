@@ -16,7 +16,7 @@ type Service struct {
 	notifService notifservice.NotifService
 }
 
-func New(a *adapters.Adapters, notifS notifservice.NotifService) *Service {
+func New(a *adapters.Adapters, notifS notifservice.NotifService) CallbackService {
 	return &Service{adapters: a, notifService: notifS}
 }
 

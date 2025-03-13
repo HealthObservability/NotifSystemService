@@ -28,6 +28,6 @@ type Service struct {
 	storage *storages.Storage
 }
 
-func NewNotifService(s *storages.Storage) *Service {
+func NewNotifService(s *storages.Storage) NotifService {
 	return &Service{s}
 }
