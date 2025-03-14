@@ -7,7 +7,7 @@ import (
 )
 
 type UserPreferences interface {
-	GetPreferences(ctx context.Context) (*UserPreferences, error)
+	GetPreferences(ctx context.Context, filter domains.UserPreferences) ([]UserPreferences, error)
 	InsertPreference(ctx context.Context, preferences domains.UserPreferences) error
 	DeletePreference(ctx context.Context, id int64) error
 }
@@ -16,7 +16,7 @@ type service struct {
 	adapters *adapters.Adapters
 }
 
-func (s service) GetPreferences(ctx context.Context) (*UserPreferences, error) {
+func (s service) GetPreferences(ctx context.Context, filter domains.UserPreferences) ([]UserPreferences, error) {
 	//TODO implement me
 	panic("implement me")
 }
