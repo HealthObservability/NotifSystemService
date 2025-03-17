@@ -7,7 +7,7 @@ servers:
   - url: 'https'
 tags:
   - name: notifications
-  - name: users_preferences
+  - name: user_preferences
 paths:
   /notifications:
     post:
@@ -71,7 +71,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-
   /notifications/{notif_id}:
     delete:
       tags:
@@ -134,8 +133,129 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
-
+  
+  /userprefs:
+    get:
+      tags:
+        - user_preferences
+      summary: get users preferences
+      operationId: getUserPrefs
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserPreferences'
+        '404':
+          description: Not found at db
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - user_preferences
+      summary: create new user preferences
+      operationId: createUserPref
+      requestBody:
+        description: Create a new user preferences
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPreferences'
+            example: 
+              user_id: 3124
+              dont_disturb_start: '23:00+03'
+              dont_disturb_end: '07:30+03'
+              
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessInsertResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+  /userprefs/{user_pref_id}:
+    delete:
+      tags:
+        - user_preferences
+      summary:  delete user_preferences
+      operationId: delUserPrefs
+      parameters:
+        - name: user_pref_id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the user_pref to delete
+      responses:
+        '204':
+          description: Successful operation
+        '404':
+          description: not found at db
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+          tags:
+            - user_preferences
+          summary: get user preferences
+          operationId: getUserPrefsById
+          parameters:
+            - name: user_pref_id
+              in: path
+              schema:
+                type: integer
+              required: true
+          responses:
+            '200':
+              description: Successful operation
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/UserPreferences'
+            '404':
+              description: Not found at db
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/ErrorResponse'
+            '500':
+              description: Internal error
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/ErrorResponse'
 
 components:
   schemas:
@@ -164,19 +284,7 @@ components:
         - message
         - repeat_interval
         - since_timestamp
-
-    ErrorResponse:
-      type: object
-      properties:
-        error:
-          type: string
-
-    SuccessInsertResponse:
-      type: object
-      properties:
-        id:
-          type: integer
-
+    
     Notification:
       type: object
       properties:
@@ -206,5 +314,45 @@ components:
         since_timestamp:
           type: string
           example: "2026-03-09T10:03:00Z"
-
+    
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+    
+    SuccessInsertResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+    
+    UserPreferences:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        dont_disturb_start:
+          type: string
+          example: "23:00+03"
+        dont_disturb_end:
+          type: string
+          example: "07:30+03"
+        created_at:
+          type: string
+          example: "2026-03-08T10:03:00Z"
+        updated_at:
+          type: string
+          example: "2026-03-09T10:03:00Z"
+      example:
+        {
+          "id": 87268,
+          "user_id": 3124,
+          "dont_disturb_start": "23:00+03",
+          "dont_disturb_end": "07:30+03",
+          "created_at": "2026-03-08T10:03:00Z",
+          "updated_at": "2026-03-09T10:03:00Z",
+        }
 
