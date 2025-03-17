@@ -6,7 +6,6 @@ import (
 	"github.com/HealthObservability/NotifSystemService/internal/config"
 	"github.com/HealthObservability/NotifSystemService/internal/handlers"
 	"github.com/HealthObservability/NotifSystemService/internal/services"
-	"github.com/HealthObservability/NotifSystemService/internal/storages"
 	"github.com/HealthObservability/NotifSystemService/pkg/logger"
 	"os"
 	"os/signal"
@@ -24,8 +23,7 @@ func main() {
 	cfg := config.MustConfigure("./config.yaml")
 
 	ad := adapters.NewAdapters(cfg)
-	st := storages.MustNew(ad)
-	srv := services.MustNew(st, ad)
+	srv := services.MustNew(ad.Database, ad)
 	h := handlers.New(srv)
 
 	ctx, stop := signal.NotifyContext(
@@ -38,5 +36,5 @@ func main() {
 	)
 	defer stop()
 
-	h.Run(ctx, ad)
+	h.Run(ctx, ad.Database, ad.HTTPServ, ad.Looper)
 }

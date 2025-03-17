@@ -3,7 +3,7 @@ package notifservice
 import (
 	"context"
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
-	"github.com/HealthObservability/NotifSystemService/internal/storages"
+	"github.com/HealthObservability/NotifSystemService/internal/ports"
 )
 
 const (
@@ -24,10 +24,10 @@ type NotifService interface {
 	//DeleteNotification(ctx context.Context, id uint64) error
 }
 
-type Service struct {
-	storage *storages.Storage
+type service struct {
+	Db ports.Database
 }
 
-func NewNotifService(s *storages.Storage) NotifService {
-	return &Service{s}
+func NewNotifService(db ports.Database) NotifService {
+	return &service{db}
 }

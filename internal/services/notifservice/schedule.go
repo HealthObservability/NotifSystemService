@@ -84,7 +84,7 @@ func calculateScheduledTime(lastScheduled time.Time, interval string) (time.Time
 	return scheduledTime, nil
 }
 
-func (s *Service) ScheduleNotifications(ctx context.Context, n []domains.Notif) error {
+func (s *service) ScheduleNotifications(ctx context.Context, n []domains.Notif) error {
 	g, ctx := errgroup.WithContext(ctx)
 	for _, notif := range n {
 		notif := notif
@@ -107,7 +107,7 @@ func (s *Service) ScheduleNotifications(ctx context.Context, n []domains.Notif) 
 				Status:     NotSentStatus,
 			}
 
-			if err = s.storage.Notifications.InsertScheduled(ctx, state); err != nil {
+			if err = s.Db.InsertScheduled(ctx, state); err != nil {
 				return err
 			}
 

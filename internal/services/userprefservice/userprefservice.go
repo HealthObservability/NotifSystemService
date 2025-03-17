@@ -2,8 +2,8 @@ package userprefservice
 
 import (
 	"context"
-	"github.com/HealthObservability/NotifSystemService/internal/adapters"
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
+	"github.com/HealthObservability/NotifSystemService/internal/ports"
 )
 
 type UserPreferences interface {
@@ -13,7 +13,7 @@ type UserPreferences interface {
 }
 
 type service struct {
-	adapters *adapters.Adapters
+	Db ports.Database
 }
 
 func (s service) GetPreferences(ctx context.Context, filter domains.UserPreferences) ([]UserPreferences, error) {
@@ -31,8 +31,8 @@ func (s service) DeletePreference(ctx context.Context, id int64) error {
 	panic("implement me")
 }
 
-func New(a *adapters.Adapters) UserPreferences {
+func New(db ports.Database) UserPreferences {
 	return service{
-		adapters: a,
+		Db: db,
 	}
 }

@@ -5,7 +5,7 @@ import (
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
 )
 
-func (s *Service) GetNotifs(ctx context.Context, n []domains.NotifState) ([]domains.Notif, error) {
+func (s *service) GetNotifs(ctx context.Context, n []domains.NotifState) ([]domains.Notif, error) {
 	length := len(n)
 
 	if length == 0 {
@@ -17,7 +17,7 @@ func (s *Service) GetNotifs(ctx context.Context, n []domains.NotifState) ([]doma
 		ids[i] = n[i].NotifID
 	}
 
-	notifs, err := s.storage.GetNotifs(ctx, ids)
+	notifs, err := s.Db.GetNotifs(ctx, ids)
 	if err != nil {
 		return nil, err
 	}
@@ -29,12 +29,12 @@ func (s *Service) GetNotifs(ctx context.Context, n []domains.NotifState) ([]doma
 	return notifs, nil
 }
 
-func (s *Service) GetAllNotifs(ctx context.Context) ([]domains.Notif, error) {
-	return s.storage.GetNotifs(ctx, nil)
+func (s *service) GetAllNotifs(ctx context.Context) ([]domains.Notif, error) {
+	return s.Db.GetNotifs(ctx, nil)
 }
 
-func (s *Service) GetNotifStates(ctx context.Context) ([]domains.NotifState, error) {
-	notifs, err := s.storage.NotificationStates.GetStatesByStatus(ctx, NotSentStatus)
+func (s *service) GetNotifStates(ctx context.Context) ([]domains.NotifState, error) {
+	notifs, err := s.Db.GetStatesByStatus(ctx, NotSentStatus)
 	if err != nil {
 		return nil, err
 	}

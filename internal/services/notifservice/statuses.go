@@ -5,7 +5,7 @@ import (
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
 )
 
-func (s *Service) UpdateSendStatus(ctx context.Context, n []domains.NotifState, status string) error {
+func (s *service) UpdateSendStatus(ctx context.Context, n []domains.NotifState, status string) error {
 	length := len(n)
 	ids := make([]int64, length)
 
@@ -13,7 +13,7 @@ func (s *Service) UpdateSendStatus(ctx context.Context, n []domains.NotifState, 
 		ids[i] = n[i].ID
 	}
 
-	if err := s.storage.UpdateStatuses(ctx, status, ids); err != nil {
+	if err := s.Db.UpdateStatuses(ctx, status, ids); err != nil {
 		return err
 	}
 

@@ -19,7 +19,7 @@ const (
 	IntervalMonth    = "month"
 )
 
-func (s *Service) AddNotification(ctx context.Context, n domains.Notif) (int64, error) {
+func (s *service) AddNotification(ctx context.Context, n domains.Notif) (int64, error) {
 	n.CreatedAt = time.Now().UTC()
 	n.Since = n.Since.UTC()
 	n.LastScheduled = n.Since
@@ -31,7 +31,7 @@ func (s *Service) AddNotification(ctx context.Context, n domains.Notif) (int64, 
 		return 0, errors.New("since time is in the past")
 	}
 
-	notifID, err := s.storage.Notifications.InsertNotif(ctx, n)
+	notifID, err := s.Db.InsertNotif(ctx, n)
 	if err != nil {
 		return 0, err
 	}
@@ -42,7 +42,7 @@ func (s *Service) AddNotification(ctx context.Context, n domains.Notif) (int64, 
 	notifState.SendDue = n.LastScheduled
 	notifState.Status = NotSentStatus
 
-	_, err = s.storage.Notifications.InsertState(ctx, notifState)
+	_, err = s.Db.InsertState(ctx, notifState)
 	if err != nil {
 		return 0, err
 	}

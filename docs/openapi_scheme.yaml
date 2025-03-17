@@ -7,6 +7,7 @@ servers:
   - url: 'https'
 tags:
   - name: notifications
+  - name: users_preferences
 paths:
   /notifications:
     post:

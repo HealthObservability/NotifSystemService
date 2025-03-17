@@ -2,7 +2,6 @@ package senderservice
 
 import (
 	"context"
-	"github.com/HealthObservability/NotifSystemService/internal/adapters"
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
 	"golang.org/x/sync/errgroup"
 	"time"
@@ -14,11 +13,10 @@ type SenderService interface {
 }
 
 type Service struct {
-	adapters *adapters.Adapters
 }
 
-func New(a *adapters.Adapters) SenderService {
-	return &Service{adapters: a}
+func New() SenderService {
+	return &Service{}
 }
 
 func (s *Service) SendNotification(ctx context.Context, notif domains.Notif) error {

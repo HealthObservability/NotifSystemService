@@ -2,6 +2,7 @@ package httpserver
 
 import (
 	"errors"
+	"github.com/HealthObservability/NotifSystemService/internal/ports"
 	"net/http"
 	"time"
 
@@ -19,12 +20,6 @@ type HTTPServAdapter struct {
 	port       string
 }
 
-type HTTPHandler interface {
-	AddNotification(c *gin.Context)
-	DeleteNotification(c *gin.Context)
-	GetNotifs(c *gin.Context)
-}
-
 func New(cfg config.HTTPServer) *HTTPServAdapter {
 	return &HTTPServAdapter{
 		origins: cfg.AllowOrigins,
@@ -32,7 +27,7 @@ func New(cfg config.HTTPServer) *HTTPServAdapter {
 	}
 }
 
-func (a *HTTPServAdapter) SetHandlers(handler HTTPHandler) {
+func (a *HTTPServAdapter) SetHandlers(handler ports.HTTPHandler) {
 	gin.SetMode(gin.ReleaseMode)
 	mainRouter := gin.New()
 	mainRouter.POST("/notifications", handler.AddNotification)

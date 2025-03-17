@@ -3,7 +3,7 @@ package handlers
 import (
 	"context"
 	"fmt"
-	"github.com/HealthObservability/NotifSystemService/internal/adapters"
+	"github.com/HealthObservability/NotifSystemService/internal/ports"
 	"github.com/HealthObservability/NotifSystemService/internal/services"
 	"github.com/HealthObservability/NotifSystemService/pkg/logger"
 	"golang.org/x/sync/errgroup"
@@ -20,14 +20,14 @@ func New(s *services.Service) *Handler {
 	return &Handler{s}
 }
 
-func (h *Handler) Run(ctx context.Context, a *adapters.Adapters) {
+func (h *Handler) Run(ctx context.Context, db ports.Database, s ports.HTTPServer, looper ports.Looper) {
 	log := logger.GetLogger().WithField("op", "app.Run")
 
-	a.HTTPServ.SetHandlers(h)
+	s.SetHandlers(h)
 
 	// run here all handlers and services
-	go a.Looper.Start(ctx, h.handleLoop)
-	go a.HTTPServ.MustRun()
+	go looper.Start(ctx, h.handleLoop)
+	go s.MustRun()
 
 	g, gCtx := errgroup.WithContext(ctx)
 	<-gCtx.Done()
@@ -40,7 +40,7 @@ func (h *Handler) Run(ctx context.Context, a *adapters.Adapters) {
 		<-gCtx.Done()
 		log.Info("shutting down http server")
 
-		if err := a.HTTPServ.Shutdown(tCtx); err != nil {
+		if err := s.Shutdown(tCtx); err != nil {
 			return fmt.Errorf("failed to shutdown HTTP adapter: %w", err)
 		}
 
@@ -53,7 +53,7 @@ func (h *Handler) Run(ctx context.Context, a *adapters.Adapters) {
 	}
 
 	g.Go(func() error {
-		if err := a.Database.Shutdown(tCtx); err != nil {
+		if err := db.Shutdown(tCtx); err != nil {
 			return fmt.Errorf("failed to shutdown postgres adapter: %w", err)
 		}
 		log.Info("postgres adapter shutdown completed")
@@ -61,6 +61,6 @@ func (h *Handler) Run(ctx context.Context, a *adapters.Adapters) {
 	})
 
 	if err := g.Wait(); err != nil {
-		log.Errorf("shutdown error: %v", err)
+		log.Fatalf("shutdown error: %v", err)
 	}
 }
