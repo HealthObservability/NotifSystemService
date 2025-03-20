@@ -11,7 +11,7 @@ func (h *Handler) InsertUserPref(c *gin.Context) {
 	log := logger.GetLogger().WithField("op", "Handler.InsertUserPref")
 	log.Info("received insert user pref request")
 
-	var userPref domains.UserPreferences
+	var userPref domains.UserPrefs
 	err := c.BindJSON(&userPref)
 	if err != nil {
 		log.WithError(err).Error("error binding json")

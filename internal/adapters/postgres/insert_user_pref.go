@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-func (p *Postgres) InsertUserPreferences(ctx context.Context, prefs domains.UserPreferences) (int64, error) {
+func (p *Postgres) InsertUserPreferences(ctx context.Context, prefs domains.UserPrefs) (int64, error) {
 	q := `
 		INSERT INTO user_preferences (user_id, dont_disturb_start, dont_disturb_end, created_at, updated_at)
 		VALUES ($1, $2, $3, $4, $5)

@@ -11,7 +11,7 @@ func (h *Handler) GetUserPrefs(c *gin.Context) {
 	log := logger.GetLogger().WithField("op", "Handler.GetUserPrefs")
 	log.Info("received get user prefs request")
 
-	var filter domains.UserPreferences
+	var filter domains.UserPrefs
 	if err := c.ShouldBindQuery(&filter); err != nil {
 		log.WithError(err).Error("error binding user prefs")
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request"})

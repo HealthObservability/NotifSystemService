@@ -25,7 +25,7 @@ func (h *Handler) DeleteUserPref(c *gin.Context) {
 		return
 	}
 
-	prefs, err := h.service.UserPreferences.GetPreferences(c, domains.UserPreferences{ID: id})
+	prefs, err := h.service.UserPreferences.GetPreferences(c, domains.UserPrefs{ID: id})
 	if err != nil {
 		log.WithError(err).Error("error reading user pref")
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete user pref"})
