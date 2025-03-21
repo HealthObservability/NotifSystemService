@@ -4,41 +4,46 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"log"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"net"
 
 	"github.com/HealthObservability/NotifSystemService/internal/config"
 	"github.com/HealthObservability/NotifSystemService/pkg/logger"
-	_ "github.com/lib/pq" // postgres
+	//_ "github.com/lib/pq" // postgres
 )
 
 type Postgres struct {
 	db *sql.DB
 }
 
-func MustNew(cfg config.Postgres) *Postgres {
-	db := mustInitConn(cfg)
-	logger.GetLogger().WithField("op", "postgres.MustNew").Info("Connected to postgres successfully")
+func MustNew(ctx context.Context, cfg config.Postgres) *Postgres {
+	log := logger.GetLogger().WithField("op", "postgres.MustNew")
+	db, err := initConn(ctx, cfg)
+	if err != nil {
+		log.WithError(err).Fatal("error connecting to database")
+	}
+	log.Info("Connected to postgres successfully")
 
 	return &Postgres{db}
 }
 
-func mustInitConn(cfg config.Postgres) *sql.DB {
+func initConn(ctx context.Context, cfg config.Postgres) (*sql.DB, error) {
 	connStr := fmt.Sprintf(
 		"postgres://%s:%s@%s/%s?sslmode=disable",
 		cfg.User, cfg.Password, net.JoinHostPort(cfg.Host, cfg.Port), cfg.Database,
 	)
 
-	db, err := sql.Open("postgres", connStr)
+	//db, err := sql.Open("postgres", connStr)
+	dbPool, err := pgxpool.New(ctx, connStr)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
-	if err = db.Ping(); err != nil {
-		log.Fatal(err)
+	if err := dbPool.Ping(ctx); err != nil {
+		return nil, err
 	}
 
-	return db
+	return dbPool, nil
 }
 
 func (p *Postgres) Shutdown(ctx context.Context) error {
