@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
-	"log"
 )
 
 func (p *Postgres) InsertNotif(ctx context.Context, n domains.Notif) (int64, error) {
@@ -18,7 +17,7 @@ func (p *Postgres) InsertNotif(ctx context.Context, n domains.Notif) (int64, err
 	fmt.Println("n.Since:", n.Since)
 	fmt.Println("n.LastScheduled:", n.LastScheduled)
 
-	rows, err := p.db.QueryContext(
+	rows, err := p.pool.Query(
 		ctx,
 		q,
 		n.CreatedAt,
@@ -33,14 +32,10 @@ func (p *Postgres) InsertNotif(ctx context.Context, n domains.Notif) (int64, err
 	} else if rows != nil && rows.Err() != nil {
 		return 0, rows.Err()
 	}
-	defer func() {
-		if err := rows.Close(); err != nil {
-			log.Println("Error closing rows: ", err)
-		}
-	}()
+	defer rows.Close()
 
 	var lastID int64
-	for rows.Next() {
+	for rows != nil && rows.Next() {
 		if err := rows.Scan(&lastID); err != nil {
 			return 0, err
 		}
@@ -57,7 +52,7 @@ func (p *Postgres) InsertState(ctx context.Context, n domains.NotifState) (int64
 		RETURNING id;
 	`
 
-	rows, err := p.db.QueryContext(
+	rows, err := p.pool.Query(
 		ctx,
 		q,
 		n.NotifID,
@@ -70,14 +65,10 @@ func (p *Postgres) InsertState(ctx context.Context, n domains.NotifState) (int64
 	} else if rows != nil && rows.Err() != nil {
 		return 0, rows.Err()
 	}
-	defer func() {
-		if err := rows.Close(); err != nil {
-			log.Println("Error closing rows: ", err)
-		}
-	}()
+	defer rows.Close()
 
 	var lastID int64
-	for rows.Next() {
+	for rows != nil && rows.Next() {
 		if err := rows.Scan(&lastID); err != nil {
 			return 0, err
 		}

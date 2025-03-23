@@ -6,7 +6,7 @@ import (
 )
 
 func (p *Postgres) InsertScheduled(ctx context.Context, n domains.NotifState) error {
-	tx, err := p.db.BeginTx(ctx, nil)
+	tx, err := p.pool.Begin(ctx)
 	if err != nil {
 		return err
 	}
@@ -17,9 +17,9 @@ func (p *Postgres) InsertScheduled(ctx context.Context, n domains.NotifState) er
 		WHERE id = $2
 	`
 
-	_, err = tx.ExecContext(ctx, q, n.SendDue, n.NotifID)
+	_, err = tx.Exec(ctx, q, n.SendDue, n.NotifID)
 	if err != nil {
-		return tx.Rollback()
+		return tx.Rollback(ctx)
 	}
 
 	q = `
@@ -27,10 +27,10 @@ func (p *Postgres) InsertScheduled(ctx context.Context, n domains.NotifState) er
 		VALUES ($1, $2, $3, $4)
 	`
 
-	_, err = tx.ExecContext(ctx, q, n.NotifID, n.SendDue, n.CreateDate, n.Status)
+	_, err = tx.Exec(ctx, q, n.NotifID, n.SendDue, n.CreateDate, n.Status)
 	if err != nil {
-		return tx.Rollback()
+		return tx.Rollback(ctx)
 	}
 
-	return tx.Commit()
+	return tx.Commit(ctx)
 }

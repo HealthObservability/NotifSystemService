@@ -2,7 +2,6 @@ package postgres
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"net"
@@ -13,27 +12,26 @@ import (
 )
 
 type Postgres struct {
-	db *sql.DB
+	pool *pgxpool.Pool
 }
 
 func MustNew(ctx context.Context, cfg config.Postgres) *Postgres {
 	log := logger.GetLogger().WithField("op", "postgres.MustNew")
-	db, err := initConn(ctx, cfg)
+	pool, err := initConn(ctx, cfg)
 	if err != nil {
 		log.WithError(err).Fatal("error connecting to database")
 	}
 	log.Info("Connected to postgres successfully")
 
-	return &Postgres{db}
+	return &Postgres{pool}
 }
 
-func initConn(ctx context.Context, cfg config.Postgres) (*sql.DB, error) {
+func initConn(ctx context.Context, cfg config.Postgres) (*pgxpool.Pool, error) {
 	connStr := fmt.Sprintf(
 		"postgres://%s:%s@%s/%s?sslmode=disable",
 		cfg.User, cfg.Password, net.JoinHostPort(cfg.Host, cfg.Port), cfg.Database,
 	)
-
-	//db, err := sql.Open("postgres", connStr)
+	
 	dbPool, err := pgxpool.New(ctx, connStr)
 	if err != nil {
 		return nil, err
@@ -47,15 +45,6 @@ func initConn(ctx context.Context, cfg config.Postgres) (*sql.DB, error) {
 }
 
 func (p *Postgres) Shutdown(ctx context.Context) error {
-	done := make(chan error, 1)
-	go func() {
-		done <- p.db.Close()
-	}()
-
-	select {
-	case <-ctx.Done():
-		return ctx.Err()
-	case err := <-done:
-		return err
-	}
+	p.pool.Close()
+	return nil // fixme
 }

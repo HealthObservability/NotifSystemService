@@ -5,11 +5,10 @@ import (
 	"time"
 
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
-	"github.com/HealthObservability/NotifSystemService/pkg/logger"
 )
 
 func (p *Postgres) GetStatesByStatus(ctx context.Context, status string) ([]domains.NotifState, error) {
-	log := logger.GetLogger().WithField("op", "Postgres.GetStatesByStatus")
+	// log := logger.GetLogger().WithField("op", "Postgres.GetStatesByStatus")
 
 	q := `
 			SELECT * 
@@ -17,21 +16,16 @@ func (p *Postgres) GetStatesByStatus(ctx context.Context, status string) ([]doma
 			WHERE send_due <= $1 AND status = $2
 	`
 
-	rows, err := p.db.QueryContext(ctx, q, time.Now().UTC(), status)
+	rows, err := p.pool.Query(ctx, q, time.Now().UTC(), status)
 	if err != nil {
 		return nil, err
 	} else if rows != nil && rows.Err() != nil {
 		return nil, rows.Err()
 	}
-	defer func() {
-		err := rows.Close()
-		if err != nil {
-			log.WithError(err).Error("Error closing rows")
-		}
-	}()
+	defer rows.Close()
 
 	var notifs []domains.NotifState
-	for rows.Next() {
+	for rows != nil && rows.Next() {
 		var notif domains.NotifState
 		err := rows.Scan(
 			&notif.ID,

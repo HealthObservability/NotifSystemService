@@ -12,7 +12,7 @@ func (p *Postgres) UpdateStatuses(ctx context.Context, status string, ids []int6
 		WHERE id = ANY($2)
 	`
 
-	_, err := p.db.ExecContext(ctx, q, status, pq.Array(ids))
+	_, err := p.pool.Exec(ctx, q, status, pq.Array(ids))
 	if err != nil {
 		return err
 	}

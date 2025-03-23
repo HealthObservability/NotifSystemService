@@ -18,14 +18,6 @@ import (
 // )
 
 func main() {
-	logger.InitDefaultLogger(logger.WithDebug())
-
-	cfg := config.MustConfigure("./config.yaml")
-
-	ad := adapters.NewAdapters(cfg)
-	srv := services.MustNew(ad.Database, ad)
-	h := handlers.New(srv)
-
 	ctx, stop := signal.NotifyContext(
 		context.Background(),
 		syscall.SIGHUP,
@@ -35,6 +27,14 @@ func main() {
 		os.Interrupt,
 	)
 	defer stop()
+	
+	logger.InitDefaultLogger(logger.WithDebug())
+
+	cfg := config.MustConfigure("./config.yaml")
+
+	ad := adapters.NewAdapters(ctx, cfg)
+	srv := services.MustNew(ad.Database, ad)
+	h := handlers.New(srv)
 
 	h.Run(ctx, ad.Database, ad.HTTPServ, ad.Looper)
 }

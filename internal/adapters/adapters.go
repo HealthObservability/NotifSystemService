@@ -1,6 +1,7 @@
 package adapters
 
 import (
+	"context"
 	"github.com/HealthObservability/NotifSystemService/internal/adapters/httpserver"
 	"github.com/HealthObservability/NotifSystemService/internal/adapters/looper"
 	"github.com/HealthObservability/NotifSystemService/internal/adapters/postgres"
@@ -14,9 +15,9 @@ type Adapters struct {
 	HTTPServ ports.HTTPServer
 }
 
-func NewAdapters(cfg config.Config) *Adapters {
+func NewAdapters(ctx context.Context, cfg config.Config) *Adapters {
 	return &Adapters{
-		Database: postgres.MustNew(cfg.Postgres),
+		Database: postgres.MustNew(ctx, cfg.Postgres),
 		HTTPServ: httpserver.New(cfg.HTTPServer),
 		Looper:   looper.NewLooper(),
 	}

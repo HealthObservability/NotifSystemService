@@ -3,7 +3,6 @@ package postgres
 import (
 	"context"
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
-	"log"
 )
 
 func (p *Postgres) InsertUserPreferences(ctx context.Context, prefs domains.UserPrefs) (int64, error) {
@@ -13,21 +12,17 @@ func (p *Postgres) InsertUserPreferences(ctx context.Context, prefs domains.User
 		RETURNING id
 	`
 
-	rows, err := p.db.QueryContext(ctx, q,
+	rows, err := p.pool.Query(ctx, q,
 		prefs.UserID, prefs.DontDisturbStart, prefs.DontDisturbEnd, prefs.CreatedAt, prefs.UpdatedAt)
 	if err != nil {
 		return 0, err
 	} else if rows != nil && rows.Err() != nil {
 		return 0, rows.Err()
 	}
-	defer func() {
-		if err := rows.Close(); err != nil {
-			log.Println("Error closing rows: ", err)
-		}
-	}()
+	defer rows.Close()
 
 	var lastID int64
-	for rows.Next() {
+	for rows != nil && rows.Next() {
 		if err := rows.Scan(&lastID); err != nil {
 			return 0, err
 		}
