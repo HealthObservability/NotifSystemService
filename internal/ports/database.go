@@ -21,5 +21,5 @@ type Notifications interface {
 
 type NotificationStates interface {
 	UpdateStatuses(ctx context.Context, status string, ids []int64) error
-	GetStatesByStatus(ctx context.Context, status string) ([]domains.NotifState, error)
+	StatesByStatus(ctx context.Context, status string) ([]domains.NotifState, error)
 }
