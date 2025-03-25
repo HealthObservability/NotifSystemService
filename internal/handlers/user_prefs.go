@@ -21,7 +21,7 @@ func (h *Handler) GetUserPrefs(c *gin.Context) {
 
 	log.WithField("filter", filter).Info("query filters")
 
-	prefs, err := h.service.UserPreferences.GetPreferences(c, filter)
+	prefs, err := h.service.UserPref.GetPreferences(c, filter)
 	if err != nil {
 		log.WithError(err).Error("error getting user prefs")
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get user prefs"})
@@ -49,7 +49,7 @@ func (h *Handler) InsertUserPref(c *gin.Context) {
 		return
 	}
 
-	err = h.service.UserPreferences.InsertPreference(c, userPref)
+	err = h.service.UserPref.InsertPreference(c, userPref)
 	if err != nil {
 		log.WithError(err).Error("error inserting user pref")
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to insert user pref"})
@@ -76,7 +76,7 @@ func (h *Handler) DeleteUserPref(c *gin.Context) {
 		return
 	}
 
-	prefs, err := h.service.UserPreferences.GetPreferences(c, domains.UserPrefs{ID: &id})
+	prefs, err := h.service.UserPref.GetPreferences(c, domains.UserPrefs{ID: &id})
 	if err != nil {
 		log.WithError(err).Error("error reading user pref")
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete user pref"})
@@ -89,7 +89,7 @@ func (h *Handler) DeleteUserPref(c *gin.Context) {
 		return
 	}
 
-	err = h.service.UserPreferences.DeletePreference(c, id)
+	err = h.service.UserPref.DeletePreference(c, id)
 	if err != nil {
 		log.WithError(err).Error("error deleting user pref")
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete user pref"})

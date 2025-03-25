@@ -1,4 +1,4 @@
-package senderservice
+package sendersvc
 
 import (
 	"context"

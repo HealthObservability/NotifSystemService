@@ -3,25 +3,26 @@ package services
 import (
 	"github.com/HealthObservability/NotifSystemService/internal/adapters"
 	"github.com/HealthObservability/NotifSystemService/internal/ports"
-	"github.com/HealthObservability/NotifSystemService/internal/services/callbackservice"
+	"github.com/HealthObservability/NotifSystemService/internal/services/callbacksvc"
 	"github.com/HealthObservability/NotifSystemService/internal/services/notifservice"
-	"github.com/HealthObservability/NotifSystemService/internal/services/senderservice"
-	"github.com/HealthObservability/NotifSystemService/internal/services/userprefservice"
+	"github.com/HealthObservability/NotifSystemService/internal/services/sendersvc"
+	"github.com/HealthObservability/NotifSystemService/internal/services/userprefsvc"
 )
 
 type Service struct {
 	notifservice.NotifService
-	senderservice.SenderService
-	callbackservice.CallbackService
-	userprefservice.UserPreferences
+	sendersvc.SenderService
+	callbacksvc.CallbackService
+	userprefsvc.UserPref
 }
 
 func MustNew(db ports.Database, a *adapters.Adapters) *Service {
-	notifS := notifservice.NewNotifService(db)
+	userPrefSvc := userprefsvc.New(db)
+	notifS := notifservice.NewNotifService(db, userPrefSvc)
 	return &Service{
 		NotifService:    notifS,
-		SenderService:   senderservice.New(),
-		CallbackService: callbackservice.New(notifS),
-		UserPreferences: userprefservice.New(db),
+		SenderService:   sendersvc.New(),
+		CallbackService: callbacksvc.New(notifS),
+		UserPref:        userPrefSvc,
 	}
 }

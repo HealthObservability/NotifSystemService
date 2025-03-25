@@ -1,4 +1,4 @@
-package callbackservice
+package callbacksvc
 
 import (
 	"context"

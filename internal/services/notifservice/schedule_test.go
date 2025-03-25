@@ -1,6 +1,7 @@
 package notifservice
 
 import (
+	"github.com/HealthObservability/NotifSystemService/internal/domains"
 	"github.com/HealthObservability/NotifSystemService/pkg/logger"
 	"testing"
 	"time"
@@ -43,7 +44,8 @@ func TestCalculateScheduledTime(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result, err := calculateScheduledTime(tt.lastScheduled, tt.interval)
+			userPrefs := domains.UserPrefs{} // fixme
+			result, err := calculateScheduledTime(tt.lastScheduled, tt.interval, userPrefs)
 			if err != nil {
 				t.Errorf("Error: %v", err)
 			}

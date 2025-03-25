@@ -3,16 +3,23 @@ package notifservice
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
 	"github.com/HealthObservability/NotifSystemService/pkg/logger"
 	"golang.org/x/sync/errgroup"
 	"time"
 )
 
-func calculateScheduledTime(lastScheduled time.Time, interval string) (time.Time, error) {
+func calculateScheduledTime(lastScheduled time.Time, interval string, p domains.UserPrefs) (time.Time, error) {
 	log := logger.GetLogger().WithField("op", "calculateScheduledTime")
 	now := time.Now().UTC()
 	lastScheduled = lastScheduled.UTC()
+
+	dontDisturbStart, dontDisturbEnd := AdjustDates(now, p.DontDisturbStart, p.DontDisturbEnd)
+
+	if IsDoNotDisturbActive(now, dontDisturbStart, dontDisturbEnd) {
+		now = dontDisturbEnd.UTC()
+	}
 
 	timeDiff := lastScheduled.Sub(now)
 	if timeDiff < 0 {
@@ -89,13 +96,22 @@ func (s *service) ScheduleNotifications(ctx context.Context, n []domains.Notif) 
 	for _, notif := range n {
 		notif := notif
 		g.Go(func() error {
+			usersPrefs, err := s.UserPrefSvc.GetPreferences(ctx, domains.UserPrefs{UserID: &notif.ToID})
+			if err != nil {
+				return err
+			}
+
+			if len(usersPrefs) == 0 {
+				return fmt.Errorf("no user preferences for %d", notif.ToID)
+			}
+
 			lastScheduled := notif.LastScheduled
 			interval := notif.RepeatInterval
 			if interval == IntervalNoRepeat {
 				return nil
 			}
 
-			scheduledTime, err := calculateScheduledTime(lastScheduled, interval)
+			scheduledTime, err := calculateScheduledTime(lastScheduled, interval, usersPrefs[0])
 			if err != nil {
 				return err
 			}
@@ -116,4 +132,23 @@ func (s *service) ScheduleNotifications(ctx context.Context, n []domains.Notif) 
 	}
 
 	return g.Wait()
+}
+
+func AdjustDates(now, start, end time.Time) (time.Time, time.Time) {
+	start = time.Date(now.Year(), now.Month(), now.Day(), start.Hour(), start.Minute(), 0, 0, now.Location())
+	end = time.Date(now.Year(), now.Month(), now.Day(), end.Hour(), end.Minute(), 0, 0, now.Location())
+
+	if start.After(end) {
+		if now.Before(start) {
+			start = start.AddDate(0, 0, -1)
+		} else {
+			end = end.AddDate(0, 0, 1)
+		}
+	}
+	return start, end
+}
+
+func IsDoNotDisturbActive(now, startTime, endTime time.Time) bool {
+	start, end := AdjustDates(now, startTime, endTime)
+	return now.After(start) && now.Before(end)
 }

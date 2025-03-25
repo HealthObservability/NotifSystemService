@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/HealthObservability/NotifSystemService/internal/domains"
 	"github.com/HealthObservability/NotifSystemService/internal/ports"
+	"github.com/HealthObservability/NotifSystemService/internal/services/userprefsvc"
 )
 
 const (
@@ -25,9 +26,13 @@ type NotifService interface {
 }
 
 type service struct {
-	Db ports.Database
+	Db          ports.Database
+	UserPrefSvc userprefsvc.UserPref
 }
 
-func NewNotifService(db ports.Database) NotifService {
-	return &service{db}
+func NewNotifService(db ports.Database, userPrefSvc userprefsvc.UserPref) NotifService {
+	return &service{
+		Db:          db,
+		UserPrefSvc: userPrefSvc,
+	}
 }
