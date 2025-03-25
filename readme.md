@@ -20,8 +20,8 @@ check for [DRAW.IO STRUCTURE FILE](notif.drawio)
 - [x] schedule repeated notification without spamming on server failure
 
 
-- [ ] User preferences
-- [ ] schedule notifications based on user preferences
+- [x] User preferences
+- [x] schedule notifications based on user preferences
 
 _P.S.
 reference: https://www.notificationapi.com/_
